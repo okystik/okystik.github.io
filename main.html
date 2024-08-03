@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stayle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная тест</title>
+    <link rel="shortcut icon" href="./img/AniPanda.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="mainpage" style="display:block;">
+
+    <div class="upnavbarmain" id="upnavbarmain">
+
+        <div class="search-container">
+            <input type="search" placeholder="Поиск аниме...">
+
+        <div class="upnavbarbtn">
+          <div class="filtr">
+            <ul>
+             <li id="filter-btn" class="filter-btn" onclick="toggleFilterSort()">
+                    <ion-icon name="funnel"></ion-icon>
+                  <div class="span"></div>
+                </li>
+             </ul>          
+          </div>
+        </div>
+
+
+        </div>
+
+    <div class="filter-sort" id="filter-sort" style="display: none;">
+        <div class="filter-backround">
+            <div class="filter-main">
+
+
+            <div class="fbtn">
+                     <button class="fbtna" data-janr="приключения" onclick="filterCards('приключения')">Приключения</button>
+                     <button class="fbtna" data-janr="магия" onclick="filterCards('магия')">Магия</button>
+                     <button class="fbtna" data-janr="исекай" onclick="filterCards('исекай')">Исекай</button>
+                     <button class="fbtna" data-janr="лечения" onclick="filterCards('лечения')">Лечения</button>
+                     <button class="fbtna" data-janr="демоны" onclick="filterCards('демоны')">Демоны</button>
+                     <button class="fbtna" data-janr="меха" onclick="filterCards('меха')">Меха</button>
+            </div>
+
+
+                <div class="closebtn">
+                   <ul>
+                      <li id="close-btn" class="close-btn"  onclick="toggleFilterSort()"><ion-icon name="close" >
+                      </ion-icon><div class="span" ></div></li>
+                   </ul>
+                </div> 
+
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+
+
+
+<div class="downnavbarmain" id="downnavbarmain">
+        <div class="downnavbarmainbuttonblur"></div>
+        <div class="downnavbarmainbutton">
+        <mm>
+    <li id="chat-btn" onclick="showChat()"><ion-icon name="help"></ion-icon><div class="span"></div></li>
+    <li id="home-btn" onclick="showHome()"><ion-icon name="home"></ion-icon><div class="span"></div></li>
+    <li id="bookmarks-btn" onclick="showBookmarks()"><ion-icon name="bookmarks"></ion-icon><div class="span"></div></li>
+        </mm>
+        </div>
+</div>
+
+   
+<div class="chat" id="chat" style="display: none;">
+</div>
+
+<div class="main" id="main" style="display: block;">
+    <div class="filtrcard" id="filtrcard">
+        <div class="filtr-btn" onclick="changeCard('maincardvishli')">Главная</div>
+        <div class="filtr-btn" onclick="changeCard('maincardnovie')">Онгоинги</div>
+    </div>
+
+<div id="maincardvishli" class="maincard" style="display:block;">
+    <div class="cards">
+
+        <div class="card visible" data-open="" data-id="">
+        <div class="containercard">
+        <img src="">
+        <div class="rating">
+        <p class="ml-rating" style="color: "> </p>
+        </div>
+        </div>
+
+        <div class="details">
+        <h3></h3>
+          </div>
+        </div>
+
+      </div>
+    </div>
+      
+<div id="maincardnovie" class="maincard" style="display:none;">
+    <div class="cards">
+
+        <div class="card visible" data-open="" data-id="">
+        <div class="containercard">
+        <img src="">
+        <div class="rating">
+        <p class="ml-rating" style="color: "> </p>
+        </div>
+        </div>
+
+        <div class="details">
+        <h3></h3>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+</div>
+
+
+<div class="histor" id="histor" style="display: none;">
+    <div class="cards">
+
+        <div class="card visible" data-open="" data-id="">
+        <div class="containercard">
+        <img src="">
+        <div class="rating">
+        <p class="ml-rating" style="color: "> </p>
+        </div>
+        </div>
+
+        <div class="details">
+        <h3></h3>
+          </div>
+        </div>
+
+      </div>
+</div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.19.0/bundled/html4+html5/jquery.history.js" integrity="sha512-MWbvhG/3qbZ5Au8U/UmQ+vgSxJKu/DhMHvz+j3Xq330cY30p2wKfFdBvAjKQ+xLm8U9Wv28FvS/5bDkM+jgwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script src="script.js"></script>
