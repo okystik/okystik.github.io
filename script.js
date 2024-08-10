@@ -103,8 +103,10 @@ inputField.addEventListener('input', function() {
   const cards = document.querySelectorAll('.card');
 
   cards.forEach(card => {
-    const name = card.querySelector('[data-name]').dataset.name;
+    // Получаем значение атрибута data-name
+    const name = card.querySelector('[data-name]').dataset.name.toLowerCase();
 
+    // Проверяем, содержит ли значение data-name поисковый запрос
     if (name.includes(searchTerm)) {
       card.style.display = '';
     } else {
@@ -112,6 +114,7 @@ inputField.addEventListener('input', function() {
     }
   });
 });
+
 
 
 

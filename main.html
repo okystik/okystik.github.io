@@ -19,7 +19,7 @@
     <div class="upnavbarmain" id="upnavbarmain">
 
         <div class="search-container">
-            <input type="search" placeholder="Поиск аниме...">
+          <input type="search" placeholder="Поиск аниме...">
 
         <div class="upnavbarbtn">
           <div class="filtr">
@@ -90,25 +90,25 @@
 
 <div id="maincardvishli" class="maincard" style="display:block;">
 
-    <div class="cards">
-      <div class="card visible" data-url="https://t.me/anime_60_fps/3450">
-            <div class="containercard">
-         <img src="./img/barmen.png">
-               <div class="rating">
-                 <p class="ml-rating" data-rating="4.5"></p>
-               </div>
+  <div class="cards">
+    <div class="card visible" data-url="https://t.me/anime_60_fps/3450">
+        <div class="containercard">
+            <img src="./img/barmen.png">
+            <div class="rating">
+                <p class="ml-rating" data-rating="4.5"></p>
             </div>
-             <div class="details">
-                <h3>Бармен</h3>
-                  <div data-name="Бармен бокал бога"></div>
-                  <div data-janr="повседневность"></div>
-                  <div data-janr=""></div>
-                  <div data-janr=""></div>
-                  <div data-janr=""></div>
-                  <div data-janr=""></div>
-            </div>
-      </div>
+        </div>
+        <div class="details">
+            <h3>Бармен</h3>
+            <div data-name="бармен бокал бога"></div>
+            <div data-janr="повседневность"></div>
+            <div data-janr=""></div>
+            <div data-janr=""></div>
+            <div data-janr=""></div>
+            <div data-janr=""></div>
+        </div>
     </div>
+</div>
 
 </div>
 
@@ -149,30 +149,6 @@
           var url = $(this).data('url');
           // Перенаправляем пользователя на указанный URL
           window.location.href = url;
-      });
-  });
-  </script>
-
-<script>
-  $(document).ready(function() {
-      $('#search-input').on('input', function() {
-          // Получаем значение поискового запроса и приводим его к нижнему регистру
-          var query = $(this).val().toLowerCase();
-  
-          // Перебираем все карточки с классом 'card'
-          $('.card').each(function() {
-              // Получаем текст из тега <h3> внутри текущей карточки
-              var title = $(this).find('h3').text().toLowerCase();
-  
-              // Сравниваем текст заголовка с поисковым запросом
-              if (title.includes(query)) {
-                  // Если заголовок соответствует запросу, отображаем карточку
-                  $(this).show();
-              } else {
-                  // Если заголовок не соответствует запросу, скрываем карточку
-                  $(this).hide();
-              }
-          });
       });
   });
   </script>
