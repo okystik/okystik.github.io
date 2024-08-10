@@ -112,7 +112,6 @@
 
 </div>
 
-
       
 <div id="maincardnovie" class="maincard" style="display:none;">
 
@@ -153,6 +152,31 @@
       });
   });
   </script>
+
+<script>
+  $(document).ready(function() {
+      $('#search-input').on('input', function() {
+          // Получаем значение поискового запроса и приводим его к нижнему регистру
+          var query = $(this).val().toLowerCase();
+  
+          // Перебираем все карточки с классом 'card'
+          $('.card').each(function() {
+              // Получаем текст из тега <h3> внутри текущей карточки
+              var title = $(this).find('h3').text().toLowerCase();
+  
+              // Сравниваем текст заголовка с поисковым запросом
+              if (title.includes(query)) {
+                  // Если заголовок соответствует запросу, отображаем карточку
+                  $(this).show();
+              } else {
+                  // Если заголовок не соответствует запросу, скрываем карточку
+                  $(this).hide();
+              }
+          });
+      });
+  });
+  </script>
+  
   
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
