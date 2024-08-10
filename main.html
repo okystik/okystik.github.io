@@ -42,8 +42,10 @@
 
             <div class="fbtn">
                      <button class="fbtna" data-janr="приключения" onclick="filterCards('приключения')">Приключения</button>
+                     <button class="fbtna" data-janr="повседневность" onclick="filterCards('повседневность')">Повседневность</button>
+                     <button class="fbtna" data-janr="школа" onclick="filterCards('школа')">Школа</button>
                      <button class="fbtna" data-janr="магия" onclick="filterCards('магия')">Магия</button>
-                     <button class="fbtna" data-janr="исекай" onclick="filterCards('исекай')">Исекай</button>
+                     <button class="fbtna" data-janr="исекай" onclick="filterCards('исекай')">Исекай(перерождение)</button>
                      <button class="fbtna" data-janr="лечения" onclick="filterCards('лечения')">Лечения</button>
                      <button class="fbtna" data-janr="демоны" onclick="filterCards('демоны')">Демоны</button>
                      <button class="fbtna" data-janr="меха" onclick="filterCards('меха')">Меха</button>
@@ -85,47 +87,76 @@
         <div class="filtr-btn" onclick="changeCard('maincardnovie')">Онгоинги</div>
     </div>
 
+    //Основаная группа
+
 <div id="maincardvishli" class="maincard" style="display:block;">
+
     <div class="cards">
-
-        <div class="card visible" >
-        <div class="containercard">
-        <img src="./img/barmen.png">
-        <div class="rating">
-          <p class="ml-rating" data-rating="4.5"></p>
-        </div>
-        </div>
-
-        <div class="details">
-        <h3></h3>
-          </div>
-        </div>
-
-      </div>
-    </div>
-      
-<div id="maincardnovie" class="maincard" style="display:none;">
-    <div class="cards">
-
-        <div class="card visible" data-open="" data-id="">
-        <div class="containercard">
-        <img src="">
-        <div class="rating">
-         <p class="ml-rating" data-rating="4.5"></p>
-        </div>
-        </div>
-
-        <div class="details">
-        <h3></h3>
-          </div>
-        </div>
-
+      <div class="card visible" data-url="https://t.me/anime_60_fps/3450">
+            <div class="containercard">
+         <img src="./img/barmen.png">
+               <div class="rating">
+                 <p class="ml-rating" data-rating="4.5"></p>
+               </div>
+            </div>
+             <div class="details">
+                <h3>Бармен</h3>
+                  <div data-name="повседневность"></div>
+                  <div data-janr=""></div>
+                  <div data-janr=""></div>
+                  <div data-janr=""></div>
+                  <div data-janr=""></div>
+                  <div data-janr=""></div>
+            </div>
       </div>
     </div>
 
 </div>
 
+
+    // Онгинги группа
+      
+<div id="maincardnovie" class="maincard" style="display:none;">
+
+  <div class="cards">
+    <div class="card visible" data-url="https://t.me/anime_60_fps/3197">
+          <div class="containercard">
+       <img src="./img/alya.png">
+             <div class="rating">
+               <p class="ml-rating" data-rating="4.6"></p>
+             </div>
+          </div>
+           <div class="details">
+              <h3>Иногда Аля внезапно кокетничает со мной по-русски</h3>
+                <div data-name="повседневность"></div>
+                <div data-janr="школа"></div>
+                <div data-janr=""></div>
+                <div data-janr=""></div>
+                <div data-janr=""></div>
+                <div data-janr=""></div>
+          </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
 </body>
+
+<script>
+  $(document).ready(function() {
+      // При клике на любую карточку с классом 'card'
+      $('.card').on('click', function() {
+          // Получаем значение data-url, которое содержит URL для перенаправления
+          var url = $(this).data('url');
+          // Перенаправляем пользователя на указанный URL
+          window.location.href = url;
+      });
+  });
+  </script>
+  
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.19.0/bundled/html4+html5/jquery.history.js" integrity="sha512-MWbvhG/3qbZ5Au8U/UmQ+vgSxJKu/DhMHvz+j3Xq330cY30p2wKfFdBvAjKQ+xLm8U9Wv28FvS/5bDkM+jgwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
