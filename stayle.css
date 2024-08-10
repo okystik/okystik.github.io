@@ -709,41 +709,41 @@ ul {
 
 
 .rating .ml-rating::after {
-  content: attr(data-rating);
-  }
-  
-  .rating .ml-rating[data-rating^=" 3"],
-  .rating .ml-rating[data-rating^=" 3.1"],
-  .rating .ml-rating[data-rating^=" 3.2"],
-  .rating .ml-rating[data-rating^=" 3.3"],
-  .rating .ml-rating[data-rating^=" 3.4"],
-  .rating .ml-rating[data-rating^=" 3.5"] {
-     color: #972503;
-  }
+  content: attr(data-rating); /* Устанавливает содержание элемента как значение data-rating */
+}
 
-  .rating .ml-rating[data-rating^=" 3.6"],
-  .rating .ml-rating[data-rating^=" 3.7"],
-  .rating .ml-rating[data-rating^=" 3.8"],
-  .rating .ml-rating[data-rating^=" 3.9"] {
-     color: #bb2c01;
-  }
-  
-  .rating .ml-rating[data-rating^=" 4"],
-  .rating .ml-rating[data-rating^=" 4.1"],
-  .rating .ml-rating[data-rating^=" 4.2"],
-  .rating .ml-rating[data-rating^=" 4.3"],
-  .rating .ml-rating[data-rating^=" 4.4"] {
-      color: #ffcc00;
-  }
-  
-  .rating .ml-rating[data-rating^=" 4.5"],
-  .rating .ml-rating[data-rating^=" 4.6"],
-  .rating .ml-rating[data-rating^=" 4.7"],
-  .rating .ml-rating[data-rating^=" 4.8"],
-  .rating .ml-rating[data-rating^=" 4.9"],
-  .rating .ml-rating[data-rating^=" 5"] {
-      color: #8fe700;
-  }
+.rating .ml-rating[data-rating^="3"],
+.rating .ml-rating[data-rating^="3.1"],
+.rating .ml-rating[data-rating^="3.2"],
+.rating .ml-rating[data-rating^="3.3"],
+.rating .ml-rating[data-rating^="3.4"],
+.rating .ml-rating[data-rating^="3.5"] {
+  color: #972503;
+}
+
+.rating .ml-rating[data-rating^="3.6"],
+.rating .ml-rating[data-rating^="3.7"],
+.rating .ml-rating[data-rating^="3.8"],
+.rating .ml-rating[data-rating^="3.9"] {
+  color: #bb2c01;
+}
+
+.rating .ml-rating[data-rating^="4"],
+.rating .ml-rating[data-rating^="4.1"],
+.rating .ml-rating[data-rating^="4.2"],
+.rating .ml-rating[data-rating^="4.3"],
+.rating .ml-rating[data-rating^="4.4"] {
+  color: #ffcc00;
+}
+
+.rating .ml-rating[data-rating^="4.5"],
+.rating .ml-rating[data-rating^="4.6"],
+.rating .ml-rating[data-rating^="4.7"],
+.rating .ml-rating[data-rating^="4.8"],
+.rating .ml-rating[data-rating^="4.9"],
+.rating .ml-rating[data-rating^="5"] {
+  color: #8fe700;
+}
 
 .histor{
   position: relative;
