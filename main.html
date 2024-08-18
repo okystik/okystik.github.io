@@ -69,15 +69,15 @@
 
 <div class="main" id="main" style="display: block;">
     <div class="filtrcard" id="filtrcard">
-        <div class="filtr-btn" onclick="changeCard('maincardvishli')">Вышли</div>
-        <div class="filtr-btn" onclick="changeCard('maincardnovie')">Новинки</div>
+        <div class="filtr-btn" onclick="changeCard('maincardvishli')">Главная</div>
+        <div class="filtr-btn" onclick="changeCard('maincardnovie')">Онгоинги</div>
     </div>
 
 
 <div id="maincardvishli" class="maincard" style="display:block;">
 
   <div class="cards">
-    <div class="card visible" data-url="https://t.me/anime_60_fps/3450">
+    <div class="card visible" onclick="toggleSeasonSort()">
         <div class="containercard">
             <img src="./img/barmen.png">
             <div class="rating">
@@ -93,7 +93,35 @@
             <div data-janr=""></div>
             <div data-janr=""></div>
         </div>
+
+        <div class="season-sort" id="season-sort" style="display: none;">
+          <div class="filter-backround">
+              <div class="filter-main">
+  
+  
+              <div class="fbtn">
+                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
+                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
+                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3453">3 серия</button>
+              </div>
+  
+  
+                  <div class="closebtn">
+                     <ul>
+                        <li id="close-btn" class="close-btn"  onclick="toggleSeasonSort()"><ion-icon name="close" >
+                        </ion-icon><div class="span" ></div></li>
+                     </ul>
+                  </div> 
+  
+  
+              </div>
+          </div>
+      </div>
+
     </div>
+
+
+
 </div>
 
 </div>
