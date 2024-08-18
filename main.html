@@ -77,49 +77,47 @@
 <div id="maincardvishli" class="maincard" style="display:block;">
 
   <div class="cards">
-    <div class="card visible" onclick="toggleSeasonSort()">
-        <div class="containercard">
-            <img src="./img/barmen.png">
-            <div class="rating">
-                <p class="ml-rating" data-rating="4.5"></p>
-            </div>
-        </div>
-        <div class="details">
-            <h3>Бармен</h3>
-            <div data-name="бармен бокал бога"></div>
-            <div data-janr="повседневность"></div>
-            <div data-janr=""></div>
-            <div data-janr=""></div>
-            <div data-janr=""></div>
-            <div data-janr=""></div>
-        </div>
 
-        <div class="season-sort" id="season-sort" style="display: none;">
+
+    <div class="card visible" onclick="toggleSeasonSort(event)">
+      <div class="containercard">
+          <img src="./img/barmen.png">
+          <div class="rating">
+              <p class="ml-rating" data-rating="4.5"></p>
+          </div>
+      </div>
+      <div class="details">
+          <h3>Бармен</h3>
+          <div data-name="бармен бокал бога"></div>
+          <div data-janr="повседневность"></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+      </div>
+  
+      <div class="season-sort" id="season-sort" style="display: none;">
           <div class="filter-backround">
               <div class="filter-main">
-  
-  
-              <div class="fbtn">
-                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
-                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
-                       <button class="fbtna" data-url="https://t.me/anime_60_fps/3453">3 серия</button>
-              </div>
-  
+                  <div class="fbtn">
+                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
+                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
+                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3453">3 серия</button>
+                  </div>
   
                   <div class="closebtn">
-                     <ul>
-                        <li id="close-btn" class="close-btn"  onclick="toggleSeasonSort()"><ion-icon name="close" >
-                        </ion-icon><div class="span" ></div></li>
-                     </ul>
-                  </div> 
-  
-  
+                      <ul>
+                          <li id="close-btn" class="close-btn" onclick="toggleSeasonSort(event)">
+                              <ion-icon name="close"></ion-icon>
+                              <div class="span"></div>
+                          </li>
+                      </ul>
+                  </div>
               </div>
           </div>
       </div>
-
-    </div>
-
+  </div>
+  
 
 
 </div>

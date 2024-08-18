@@ -227,24 +227,19 @@ function toggleFilterSort() {
 }
 
 // Для выбора сезонов и серий
+function toggleSeasonSort(event) {
+  // Остановить распространение события и предотвратить переход по ссылке
+  event.preventDefault();
+  event.stopPropagation();
 
-function toggleSeasonSort() {
-  const seasonBtn = document.getElementById('season-btn');
-  if (seasonBtn.classList.contains('active')) {
-    seasonBtn.classList.remove('active');
-  } else {
-    seasonBtn.classList.add('active');
-  }
-}
-
-function toggleSeasonSort() {
   var seasonSort = document.getElementById("season-sort");
   if (seasonSort.style.display === "block") {
-    seasonSort.style.display = "none";
+      seasonSort.style.display = "none";
   } else {
-    seasonSort.style.display = "block";
+      seasonSort.style.display = "block";
   }
 }
+
 
 
 // Для Рейтинга 
