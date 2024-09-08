@@ -469,6 +469,8 @@ input[type="search"] {
     transform: translate(-50%, -50%);
   }
 
+  
+
 
 
 
@@ -486,6 +488,30 @@ input[type="search"] {
   }
   
   .fbtna.active {
+    color: #FFA500; /* Оранжевый цвет для активного фильтра */
+    height: 27px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #FFA500;
+  }
+
+  .sbtna {
+    color: #808080;
+    height: 27px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #414141;
+  }
+  
+  .sbtna.active {
     color: #FFA500; /* Оранжевый цвет для активного фильтра */
     height: 27px;
     background-color: transparent;
@@ -665,7 +691,96 @@ ul {
   }
 
 
+  /*----------------------------------------------------------------*/
+  /*---------Настройка карточек и выборки серий с сезоном-----------*/
+  /*----------------------------------------------------------------*/
 
+
+
+  .list-main {
+    width: 250px;
+    height: 500px;
+    background-color: #1f1f1f;
+    color: white;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .list-backround {
+    width: 20000px;
+    height: 20000px;
+    background-color: var(--color-glass);
+    backdrop-filter: blur(12px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+  }
+
+  .listclosebtn {
+    position: fixed;
+    display: block;
+    left: 50%;
+    top: 462px;
+    height: 31px;
+    transform: translate(-50%, -50%);
+  }
+
+  .listclose-btn {
+    position: relative;
+    display: flex;
+    height: 28px;
+    width: 100px;
+    background-color: #1f1f1f;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid transparent;
+  }
+
+  
+  .lbtna {
+    color: #808080;
+    height: 27px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #414141;
+  }
+  
+  .lbtna.active {
+    color: #FFA500; /* Оранжевый цвет для активного фильтра */
+    height: 27px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #FFA500;
+  }
+  
+  .listclose-btn.active {
+    border: 1px solid #d87700;
+  }
+
+  .list {
+    display: none; /* Скрываем по умолчанию */
+  }
+  
+  .list.visible {
+    display: block; /* Показываем при добавлении класса "visible" */
+  }
+  
 
 
   /*----------------------------------------------------------------*/

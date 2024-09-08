@@ -226,20 +226,48 @@ function toggleFilterSort() {
   }
 }
 
-// Для выбора сезонов и серий
-function toggleSeasonSort(event) {
-  // Остановить распространение события и предотвратить переход по ссылке
-  event.preventDefault();
-  event.stopPropagation();
 
-  var seasonSort = document.getElementById("season-sort");
-  if (seasonSort.style.display === "block") {
-      seasonSort.style.display = "none";
+// Для выбора серий и сезонов
+
+
+function toggleListSort() {
+  const listBtn = document.getElementById('list-btn');
+  if (listBtn.classList.contains('active')) {
+    listBtn.classList.remove('active');
   } else {
-      seasonSort.style.display = "block";
+    listBtn.classList.add('active');
   }
 }
 
+function toggleListSort() {
+  var listSort = document.getElementById("list-sort");
+  if (listSort.style.display === "block") {
+    listSort.style.display = "none";
+  } else {
+    listSort.style.display = "block";
+  }
+}
+
+
+// Для выбора сезонов и серий
+
+function toggleSeasonSort() {
+  const seasonBtn = document.getElementById('season-btn');
+  if (seasonBtn.classList.contains('active')) {
+    seasonBtn.classList.remove('active');
+  } else {
+    seasonBtn.classList.add('active');
+  }
+}
+
+function toggleSeasonSort() {
+  var seasonSort = document.getElementById("season-sort");
+  if (seasonSort.style.display === "block") {
+    seasonSort.style.display = "none";
+  } else {
+    seasonSort.style.display = "block";
+  }
+}
 
 
 // Для Рейтинга 

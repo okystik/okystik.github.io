@@ -70,7 +70,7 @@
 <div class="main" id="main" style="display: block;">
     <div class="filtrcard" id="filtrcard">
         <div class="filtr-btn" onclick="changeCard('maincardvishli')">Главная</div>
-        <div class="filtr-btn" onclick="changeCard('maincardnovie')">Онгоинги</div>
+        <div class="filtr-btn" onclick="changeCard('maincardnovie')">Новинки</div>
     </div>
 
 
@@ -79,7 +79,7 @@
   <div class="cards">
 
 
-    <div class="card visible" onclick="toggleSeasonSort(event)">
+<div class="card visible" onclick="toggleListSort()" >
       <div class="containercard">
           <img src="./img/barmen.png">
           <div class="rating">
@@ -95,28 +95,27 @@
           <div data-janr=""></div>
           <div data-janr=""></div>
       </div>
-  
-      <div class="season-sort" id="season-sort" style="display: none;">
-          <div class="filter-backround">
-              <div class="filter-main">
-                  <div class="fbtn">
-                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
-                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
-                      <button class="fbtna" data-url="https://t.me/anime_60_fps/3453">3 серия</button>
-                  </div>
-  
-                  <div class="closebtn">
-                      <ul>
-                          <li id="close-btn" class="close-btn" onclick="toggleSeasonSort(event)">
-                              <ion-icon name="close"></ion-icon>
-                              <div class="span"></div>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
+      <div class="list">
+
+        <div class="list-backround">
+          <div class="list-main">
+
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
+          
+                 <div class="listclosebtn">
+              <ul>
+                 <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                 </ion-icon><div class="span" ></div></li>
+              </ul>
+                 </div> 
+
           </div>
-      </div>
-  </div>
+        </div>
+
+    </div>
+
+</div>
   
 
 
@@ -156,7 +155,7 @@
 <script>
   $(document).ready(function() {
       // При клике на любую карточку с классом 'card'
-      $('.card').on('click', function() {
+      $('.lbtna').on('click', function() {
           // Получаем значение data-url, которое содержит URL для перенаправления
           var url = $(this).data('url');
           // Перенаправляем пользователя на указанный URL
@@ -164,6 +163,29 @@
       });
   });
   </script>
+
+<script>
+// Добавляем делегирование событий для всех блоков 'card'
+document.addEventListener('click', function(event) {
+    // Проверяем, клик был по блоку 'card' или его дочерним элементам
+    const card = event.target.closest('.card');
+    
+    if (card) {
+        // Находим элемент 'list' внутри текущей карточки
+        const list = card.querySelector('.list');
+        
+        // Проверяем, что клик был не по кнопке закрытия 'listclose-btn'
+        if (event.target.closest('.listclose-btn')) {
+            event.stopPropagation(); // Останавливаем всплытие события
+            list.classList.remove('visible'); // Скрываем блок 'list'
+        } else if (!event.target.closest('.list')) {
+            // Если клик произошёл не внутри блока 'list' - переключаем видимость
+            list.classList.toggle('visible');
+        }
+    }
+});
+
+</script>
   
   
 
