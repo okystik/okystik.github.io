@@ -727,7 +727,7 @@ ul {
     position: fixed;
     display: block;
     left: 50%;
-    top: 462px;
+    bottom: -25px;
     height: 31px;
     transform: translate(-50%, -50%);
   }
@@ -1027,6 +1027,20 @@ mm {
   .filter-main {
     height: 256px;
     width: 580px;
+  }
+
+  .list-main {
+    height: 256px;
+    width: 580px;
+  }
+
+  .listclosebtn {
+    position: fixed;
+    display: block;
+    left: 50%;
+    bottom: -25px;
+    height: 31px;
+    transform: translate(-50%, -50%);
   }
 
   .closebtn {
