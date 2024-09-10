@@ -1025,12 +1025,12 @@ mm {
 @media (orientation: landscape) {
 
   .filter-main {
-    height: 256px;
+    height: 216px;
     width: 580px;
   }
 
   .list-main {
-    height: 256px;
+    height: 216px;
     width: 580px;
   }
 
