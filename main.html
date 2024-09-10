@@ -43,6 +43,7 @@
             <div class="fbtn">
                      <button class="fbtna" data-janr="приключения" onclick="filterCards('приключения')">Приключения</button>
                      <button class="fbtna" data-janr="повседневность" onclick="filterCards('повседневность')">Повседневность</button>
+                     <button class="fbtna" data-janr="фантастика" onclick="filterCards('фантастика')">Фантастика</button>
                      <button class="fbtna" data-janr="школа" onclick="filterCards('школа')">Школа</button>
                      <button class="fbtna" data-janr="война" onclick="filterCards('война')">Война</button>
                      <button class="fbtna" data-janr="магия" onclick="filterCards('магия')">Магия</button>
@@ -80,7 +81,55 @@
 
   <div class="cards">
 
-<!-- начало ячейки -->
+<!-- начало ячейки Кайдзю номер 8-->
+<div class="card visible" onclick="toggleListSort()" >
+  <div class="containercard">
+      <img src="./img/kaydzu8.png">
+    <div class="rating">
+              <p class="ml-rating" data-rating="4.5"></p>
+          </div>
+      </div>
+      <div class="details">
+          <h3>Кайдзю номер:8</h3>
+          <div data-name="Кайдзю номер:8 восемь"></div>
+          <div data-janr="приключения"></div>
+          <div data-janr="фантастика"></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+      </div>
+      <div class="list">
+
+        <div class="list-backround">
+          <div class="list-main">
+
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3495">1 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3496">2 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3498">3 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3499">4 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3500">5 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3501">6 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3502">7 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3503">8 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3504">9 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3505">10 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3506">11 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3507">12 серия</button>
+          
+                 <div class="listclosebtn">
+              <ul>
+                 <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                 </ion-icon></li>
+              </ul>
+                 </div> 
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- конец ячейки -->
+  
+<!-- начало ячейки Бармен-->
 <div class="card visible" onclick="toggleListSort()" >
   <div class="containercard">
       <img src="./img/barmen.png">
@@ -103,12 +152,22 @@
           <div class="list-main">
 
             <button class="lbtna" data-url="https://t.me/anime_60_fps/3451">1 серия</button>
-            <button class="lbtna" data-url="https://t.me/anime_60_fps/3452">2 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3453">2 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3456">3 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3459">4 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3461">5 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3464">6 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3466">7 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3468">8 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3471">9 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3473">10 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3475">11 серия</button>
+            <button class="lbtna" data-url="https://t.me/anime_60_fps/3477">12 серия</button>
           
                  <div class="listclosebtn">
               <ul>
                  <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
-                 </ion-icon><div class="span" ></div></li>
+                 </ion-icon></li>
               </ul>
                  </div> 
 
@@ -118,7 +177,7 @@
 </div>
 <!-- конец ячейки -->
 
-<!-- начало ячейки -->
+<!-- начало ячейки звездно дитя -->
 <div class="card visible" onclick="toggleListSort()" >
   <div class="containercard">
       <img src="./img/StarChildren.png">
@@ -145,7 +204,7 @@
                  <div class="listclosebtn">
               <ul>
                  <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
-                 </ion-icon><div class="span" ></div></li>
+                 </ion-icon></li>
               </ul>
                  </div> 
 
@@ -155,7 +214,7 @@
 </div>
 <!-- конец ячейки -->
 
-<!-- начало ячейки -->
+<!-- начало ячейки Врата там бьются наши войны -->
   <div class="card visible" onclick="toggleListSort()" >
   <div class="containercard">
       <img src="./img/gate.png">
@@ -177,12 +236,13 @@
         <div class="list-backround">
           <div class="list-main">
 
-            <button class="lbtna" data-url="https://t.me/anime_60_fps/3403">2 сезон</button>
-          
+            <div class="listseasons"><h2>1 сезон</h2>
+              <button class="lbtna" data-url="https://t.me/anime_60_fps/3403">2 сезон</button>
+            </div>
                  <div class="listclosebtn">
               <ul>
                  <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
-                 </ion-icon><div class="span" ></div></li>
+                 </ion-icon></li>
               </ul>
                  </div> 
 
