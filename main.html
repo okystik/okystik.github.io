@@ -252,6 +252,82 @@
 </div>
 <!-- конец ячейки -->
 
+<!-- начало ячейки Провожающая в последний путь Фрирен -->
+<div class="card visible" onclick="toggleListSort()" >
+  <div class="containercard">
+      <img src="./img/friren.png">
+    <div class="rating">
+              <p class="ml-rating" data-rating="4.7"></p>
+          </div>
+      </div>
+      <div class="details">
+          <h3>Провожающая в последний путь Фрирен</h3>
+          <div data-name="Провожающая в последний путь Фрирен"></div>
+          <div data-janr="приключения"></div>
+          <div data-janr="магия"></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+      </div>
+      <div class="list">
+
+        <div class="list-backround">
+          <div class="list-main">
+
+            <div class="listseasons" style="font-size: 18px;"><h2>1 сезон</h2>
+              <button class="lbtna" data-url="https://t.me/anime_60_fps/3279">выбор серий</button>
+            </div>
+                 <div class="listclosebtn">
+              <ul>
+                 <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                 </ion-icon></li>
+              </ul>
+                 </div> 
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- конец ячейки -->
+
+<!-- начало ячейки Перерождение:Монстр -->
+<div class="card visible" onclick="toggleListSort()" >
+  <div class="containercard">
+      <img src="./img/monster.png">
+    <div class="rating">
+              <p class="ml-rating" data-rating="4.2"></p>
+          </div>
+      </div>
+      <div class="details">
+          <h3>Перерождение:Монстр</h3>
+          <div data-name="Перерождение:Монстр"></div>
+          <div data-janr="приключения"></div>
+          <div data-janr="магия"></div>
+          <div data-janr="исекай"></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+      </div>
+      <div class="list">
+
+        <div class="list-backround">
+          <div class="list-main">
+
+            <div class="listseasons" style="font-size: 18px;"><h2>1 сезон</h2>
+              <button class="lbtna" data-url="https://t.me/anime_60_fps/3416">выбор серий</button>
+            </div>
+                 <div class="listclosebtn">
+              <ul>
+                 <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                 </ion-icon></li>
+              </ul>
+                 </div> 
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- конец ячейки -->
+
 
   </div>
 </div>
@@ -356,13 +432,13 @@ function handleGesture() {
 
   // Свайп считается только если горизонтальное движение больше вертикального
   if (horizontalSwipeDistance > verticalSwipeDistance && horizontalSwipeDistance > 50) {
-    if (touchEndX < touchStartX) {
-      // Свайп влево, клик по кнопке "Главная"
-      document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
-    }
     if (touchEndX > touchStartX) {
       // Свайп вправо, клик по кнопке "Новинки"
       document.querySelector('.filtr-btn[onclick="changeCard(\'maincardnovie\')"]').click();
+    }
+    if (touchEndX < touchStartX) {
+      // Свайп влево, клик по кнопке "Главная"
+      document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
     }
   }
 }
