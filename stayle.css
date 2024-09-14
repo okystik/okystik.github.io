@@ -425,7 +425,7 @@ input[type="search"] {
     height: 51px;
     width: 0px;
     bottom: -47px;
-    left: 75px;
+    left: 310px;
     justify-content: flex-start;
     align-items: flex-start;
 }
@@ -727,7 +727,7 @@ ul {
     position: fixed;
     display: block;
     left: 50%;
-    bottom: -25px;
+    bottom: -15px;
     height: 31px;
     transform: translate(-50%, -50%);
   }
@@ -736,7 +736,7 @@ ul {
     position: relative;
     display: flex;
     height: 28px;
-    width: 100px;
+    width: 50px;
     background-color: #1f1f1f;
     justify-content: center;
     align-items: center;
@@ -781,7 +781,16 @@ ul {
     display: block; /* Показываем при добавлении класса "visible" */
   }
   
-
+  .listseasons {
+    color: #808080;
+    height: 27px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+    font-size: 15px;
+}
 
   /*----------------------------------------------------------------*/
   /*----------------------Настройка карточек------------------------*/
@@ -1038,7 +1047,7 @@ mm {
     position: fixed;
     display: block;
     left: 50%;
-    bottom: -25px;
+    bottom: -15px;
     height: 31px;
     transform: translate(-50%, -50%);
   }
