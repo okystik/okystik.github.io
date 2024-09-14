@@ -253,7 +253,7 @@
 <!-- конец ячейки -->
 
 
-</div>
+  </div>
 </div>
 
 
@@ -262,30 +262,52 @@
 </div>
 
       
-<div id="maincardnovie" class="maincard" style="display:none;">
+  <div id="maincardnovie" class="maincard" style="display:none;">
 
-  <div class="cards">
-    <div class="card visible" data-url="https://t.me/anime_60_fps/3197">
-          <div class="containercard">
-       <img src="./img/alya.png">
-             <div class="rating">
-               <p class="ml-rating" data-rating="4.6"></p>
-             </div>
-          </div>
-           <div class="details">
-              <h3>Иногда Аля внезапно кокетничает со мной по-русски</h3>
-                <div data-name="Иногда Аля внезапно кокетничает со мной по-русски"></div>
-                <div data-janr="школа"></div>
-                <div data-janr="повседневность"></div>
-                <div data-janr=""></div>
-                <div data-janr=""></div>
-                <div data-janr=""></div>
-          </div>
+    <div class="cards">
+
+
+    <!-- начало ячейки Иногда Аля внезапно кокетничает со мной по-русски -->
+  <div class="card visible" onclick="toggleListSort()" >
+    <div class="containercard">
+        <img src="./img/alya.png">
+      <div class="rating">
+                <p class="ml-rating" data-rating="4.4"></p>
+            </div>
+        </div>
+        <div class="details">
+            <h3>Иногда Аля внезапно кокетничает со мной по-русски</h3>
+            <div data-name="Иногда Аля внезапно кокетничает со мной по-русски"></div>
+            <div data-janr="школа"></div>
+            <div data-janr="повседневность"></div>
+            <div data-janr=""></div>
+            <div data-janr=""></div>
+            <div data-janr=""></div>
+        </div>
+        <div class="list">
+  
+          <div class="list-backround">
+            <div class="list-main">
+  
+              <div class="listseasons"><h2>1 сезон</h2>
+                <button class="lbtna" data-url="https://t.me/anime_60_fps/3197">2 сезон</button>
+              </div>
+                   <div class="listclosebtn">
+                <ul>
+                   <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                   </ion-icon></li>
+                </ul>
+                   </div> 
+  
+        </div>
+      </div>
     </div>
   </div>
+  <!-- конец ячейки -->
 
-</div>
 
+    </div>
+  </div>
 </div>
 
 </body>
@@ -322,6 +344,29 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleGesture() {
+  if (touchEndX < touchStartX) {
+    // Свайп влево, клик по кнопке "Главная"
+    document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
+  }
+  if (touchEndX > touchStartX) {
+    // Свайп вправо, клик по кнопке "Новинки"
+    document.querySelector('.filtr-btn[onclick="changeCard(\'maincardnovie\')"]').click();
+  }
+}
+
+document.addEventListener('touchstart', function(event) {
+  touchStartX = event.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener('touchend', function(event) {
+  touchEndX = event.changedTouches[0].screenX;
+  handleGesture();
+}, false);
 
 </script>
   
