@@ -1047,7 +1047,7 @@ mm {
     position: fixed;
     display: block;
     left: 50%;
-    bottom: -15px;
+    bottom: -5px;
     height: 31px;
     transform: translate(-50%, -50%);
   }
