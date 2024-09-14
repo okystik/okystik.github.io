@@ -347,26 +347,37 @@ document.addEventListener('click', function(event) {
 
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
 
 function handleGesture() {
-  if (touchEndX < touchStartX) {
-    // Свайп влево, клик по кнопке "Главная"
-    document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
-  }
-  if (touchEndX > touchStartX) {
-    // Свайп вправо, клик по кнопке "Новинки"
-    document.querySelector('.filtr-btn[onclick="changeCard(\'maincardnovie\')"]').click();
+  const horizontalSwipeDistance = Math.abs(touchEndX - touchStartX);
+  const verticalSwipeDistance = Math.abs(touchEndY - touchStartY);
+
+  // Свайп считается только если горизонтальное движение больше вертикального
+  if (horizontalSwipeDistance > verticalSwipeDistance && horizontalSwipeDistance > 50) {
+    if (touchEndX < touchStartX) {
+      // Свайп влево, клик по кнопке "Главная"
+      document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
+    }
+    if (touchEndX > touchStartX) {
+      // Свайп вправо, клик по кнопке "Новинки"
+      document.querySelector('.filtr-btn[onclick="changeCard(\'maincardnovie\')"]').click();
+    }
   }
 }
 
 document.addEventListener('touchstart', function(event) {
   touchStartX = event.changedTouches[0].screenX;
+  touchStartY = event.changedTouches[0].screenY;
 }, false);
 
 document.addEventListener('touchend', function(event) {
   touchEndX = event.changedTouches[0].screenX;
+  touchEndY = event.changedTouches[0].screenY;
   handleGesture();
 }, false);
+
 
 </script>
   
