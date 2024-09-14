@@ -299,8 +299,8 @@
           </div>
       </div>
       <div class="details">
-          <h3>Перерождение:Монстр</h3>
-          <div data-name="Перерождение:Монстр"></div>
+          <h3>Перерождение Монстр</h3>
+          <div data-name="Перерождение Монстр"></div>
           <div data-janr="приключения"></div>
           <div data-janr="магия"></div>
           <div data-janr="исекай"></div>
@@ -432,11 +432,11 @@ function handleGesture() {
 
   // Свайп считается только если горизонтальное движение больше вертикального
   if (horizontalSwipeDistance > verticalSwipeDistance && horizontalSwipeDistance > 50) {
-    if (touchEndX > touchStartX) {
+    if (touchEndX < touchStartX) {
       // Свайп вправо, клик по кнопке "Новинки"
       document.querySelector('.filtr-btn[onclick="changeCard(\'maincardnovie\')"]').click();
     }
-    if (touchEndX < touchStartX) {
+    if (touchEndX > touchStartX) {
       // Свайп влево, клик по кнопке "Главная"
       document.querySelector('.filtr-btn[onclick="changeCard(\'maincardvishli\')"]').click();
     }
