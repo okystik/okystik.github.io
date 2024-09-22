@@ -726,7 +726,7 @@ ul {
   .listclosebtn {
     position: fixed;
     display: block;
-    left: 96%;
+    left: 91%;
     bottom: -8px;
     height: 31px;
     transform: translate(-50%, -50%);
