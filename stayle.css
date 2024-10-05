@@ -723,20 +723,20 @@ ul {
   }
 
   .listclosebtn {
-    position: relative;
+    position: fixed;
     display: block;
-    bottom: -8px;
+    left: 50%;
+    padding-top: 10px;
+    top: 0px;
     height: 31px;
     transform: translate(-50%, -50%);
-    z-index: 999;
   }
 
   .listclose-btn {
     position: relative;
     display: flex;
-    height: 35px;
-    width: 45px;
-    background-color: #37373787;
+    height: 50px;
+    width: 50px;
     justify-content: center;
     align-items: center;
     border-radius: 10px 1px 10px 1px;
@@ -1044,8 +1044,9 @@ mm {
   .listclosebtn {
     position: fixed;
     display: block;
-    left: 96%;
-    bottom: -8px;
+    left: 50%;
+    padding-top: 10px;
+    top: 0px;
     height: 31px;
     transform: translate(-50%, -50%);
 }
@@ -1053,9 +1054,9 @@ mm {
   .listclose-btn {
     position: relative;
     display: flex;
-    height: 35px;
-    width: 45px;
-    background-color: #37373787;
+    height: 50px;
+    width: 50px;
+    background-color: #c54c4c87;
     justify-content: center;
     align-items: center;
     border-radius: 10px 1px 10px 1px;
