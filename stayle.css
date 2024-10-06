@@ -745,24 +745,22 @@ ul {
   
   .lbtna {
     color: #808080;
-    height: 27px;
+    width: 50px;
+    height: 50px;
     background-color: transparent;
     cursor: pointer;
-    margin-right: 10px;
     border-radius: 10px;
-    padding: 6px;
-    margin-top: 5px;
+    margin-top: 8px;
     border: 1px solid #414141;
-  }
+}
   
   .lbtna.active {
     color: #FFA500; /* Оранжевый цвет для активного фильтра */
     height: 27px;
     background-color: transparent;
     cursor: pointer;
-    margin-right: 10px;
     border-radius: 10px;
-    padding: 6px;
+    padding: 3px;
     margin-top: 5px;
   }
   
@@ -779,15 +777,26 @@ ul {
   }
   
   .listseasons {
+    position: relative;
+    display: grid;
     color: #808080;
-    height: 27px;
+    width: 100%;
+    height: 92%;
     background-color: transparent;
     cursor: pointer;
-    margin-right: 10px;
     border-radius: 10px;
-    margin-top: 5px;
-    font-size: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(74px, 0fr));
+    gap: 1px;
+    overflow-y: auto;
+    justify-content: center;
+    justify-items: center;
+  }
+  
+/* Скрываем ползунок прокрутки в WebKit-браузерах (Chrome, Safari) */
+.listseasons::-webkit-scrollbar {
+  display: none;
 }
+
 
 
 .listseasonsmain {
@@ -828,7 +837,7 @@ ul {
 
 .ml-rating {
   color: #777;
-  font-size: clamp(0.4rem, 0.3vw + 0.7rem, 1rem);
+  font-size: clamp(0.4rem, 0.3vw + 0.9rem, 1rem);
   font-family: b;
   white-space: nowrap;
   overflow: hidden;
@@ -1065,6 +1074,22 @@ mm {
     top: 0px;
     height: 31px;
     transform: translate(-50%, -50%);
+}
+
+.listseasons {
+  position: relative;
+  display: grid;
+  color: #808080;
+  width: 100%;
+  height: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 0fr));
+  gap: 1px;
+  overflow-y: auto;
+  justify-content: center;
+  justify-items: center;
 }
 
   .listclose-btn {
