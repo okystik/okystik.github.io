@@ -14,7 +14,7 @@ body {
     font-family: 'b';
     src: url('font/Manrope_bold.ttf') format('truetype');
   }
-  
+  70px
   @font-face {
     font-family: 'r';
     src: url('font/Manrope_regular.ttf') format('truetype');
@@ -745,7 +745,7 @@ ul {
   
   .lbtna {
     color: #808080;
-    width: 50px;
+    width: 70px;
     height: 50px;
     background-color: transparent;
     cursor: pointer;
@@ -780,7 +780,7 @@ ul {
     position: relative;
     display: grid;
     padding-top: 12px;
-    grid-template-columns: repeat(auto-fill,minmax(50px,1fr));
+    grid-template-columns: repeat(auto-fill,minmax(70px,1fr));
   }
   
 /* Скрываем ползунок прокрутки в WebKit-браузерах (Chrome, Safari) */
@@ -1070,7 +1070,7 @@ mm {
     position: relative;
     display: grid;
     padding-top: 12px;
-    grid-template-columns: repeat(auto-fill,minmax(50px,1fr));
+    grid-template-columns: repeat(auto-fill,minmax(70px,1fr));
 }
 
   .listclose-btn {
