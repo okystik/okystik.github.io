@@ -420,14 +420,14 @@ input[type="search"] {
   }
 
   .filtr {
-    position: fixed;
-    display: flex;
-    height: 51px;
-    width: 0px;
-    bottom: -47px;
-    left: 310px;
-    justify-content: flex-start;
-    align-items: flex-start;
+  position: fixed;
+  display: flex;
+  height: 51px;
+  width: 0px;
+  bottom: -69px;
+  left: 310px;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 
@@ -584,12 +584,9 @@ input[type="search"] {
   
 ul {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  gap: 10px;
+  display: block;
   border-radius: 10px;
-  padding: 6px;
+  padding: 7px;
   z-index: 101;
   }
   
@@ -674,15 +671,15 @@ ul {
 
 
   .close-btn {
-    position: relative;
-    display: flex;
-    height: 35px;
-    width: 35px;
-    background-color: #37373787;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px 1px 10px 1px;
-    border: 1px solid transparent;
+  position: relative;
+  display: flex;
+  height: 35px;
+  width: 35px;
+  background-color: #37373787;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px 1px 10px 1px;
+  top: -2px;
 }
   
   .close-btn.active {
@@ -722,24 +719,28 @@ ul {
   }
 
   .listclosebtn {
-    position: fixed;
-    display: block;
-    left: 50%;
-    padding-top: 10px;
-    top: 0px;
-    height: 31px;
-    transform: translate(-50%, -50%);
+  position: fixed;
+  display: flex;
+  left: 85%;
+  padding-top: 10px;
+  top: 28px;
+  height: 35px;
+  transform: translate(-50%, -50%);
+  background-color: #4646468c;
+  width: 35px;
+  border-radius: 13px;
+  justify-content: center;
   }
 
   .listclose-btn {
-    position: relative;
-    display: flex;
-    height: 50px;
-    width: 50px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px 1px 10px 1px;
-    border: 1px solid transparent;
+  position: relative;
+  display: flex;
+  height: 50px;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px 1px 10px 1px;
+  border: 1px solid transparent;
   }
 
   
