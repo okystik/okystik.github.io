@@ -14,7 +14,7 @@ body {
     font-family: 'b';
     src: url('font/Manrope_bold.ttf') format('truetype');
   }
-  70px
+  70pxА
   @font-face {
     font-family: 'r';
     src: url('font/Manrope_regular.ttf') format('truetype');
@@ -464,7 +464,7 @@ input[type="search"] {
     position: fixed;
     display: block;
     left: 93.2%;
-    top: 95.6%;
+    top: 99.6%;
     height: 31px;
     transform: translate(-50%, -50%);
 }
@@ -588,6 +588,7 @@ ul {
   border-radius: 10px;
   padding: 7px;
   z-index: 101;
+  bottom: 22px;
   }
   
   ul li {
