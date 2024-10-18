@@ -14,7 +14,7 @@ body {
     font-family: 'b';
     src: url('font/Manrope_bold.ttf') format('truetype');
   }
-  70pxА
+  
   @font-face {
     font-family: 'r';
     src: url('font/Manrope_regular.ttf') format('truetype');
@@ -35,7 +35,7 @@ body {
   }
   
   body::-webkit-scrollbar-thumb {
-    background-color: #d87700;
+    background-color: #f24b1f;
   }
   
   body::-webkit-scrollbar-track {
@@ -44,7 +44,7 @@ body {
   
   body::-webkit-scrollbar-thumb {
     max-width: 10px;
-    background-color: #d87700;
+    background-color: #f24b1f;
   }
   
   
@@ -140,7 +140,7 @@ body {
 
   .btn-registr {
     margin-top: 12px;
-    background-color: #d87700;
+    background-color: #f24b1f;
     color: #e4e4e4;
     width: 150px;
     height: 30px;
@@ -392,7 +392,7 @@ input[type="search"] {
   input[type="search"]:focus {
     outline: none;
     color: #ececec;
-    border-color: #d87700;
+    border-color: #f24b1f;
   }
 
   input[type="search"]:focus, input[type="search"]:valid {
@@ -462,17 +462,27 @@ input[type="search"] {
 
   .closebtn {
     position: fixed;
-    display: block;
-    left: 93.2%;
-    top: 99.6%;
-    height: 31px;
+    display: flex;
+    top: 29px;
+    padding-top: 7px;
+    right: 10px;
+    height: 35px;
     transform: translate(-50%, -50%);
-}
+    width: 35px;
+    border-radius: 16px;
+    justify-content: center;
+    align-items: center;
+    background-color: #242424;
+  }
 
   
 
 
 
+  .fbtn {
+    width: 95%;
+    overflow: auto;
+  }
 
 
   .fbtna {
@@ -496,7 +506,7 @@ input[type="search"] {
     border-radius: 10px;
     padding: 6px;
     margin-top: 5px;
-    border: 1px solid #FFA500;
+    border: 1px solid #f24b1f;
   }
 
   .sbtna {
@@ -512,7 +522,7 @@ input[type="search"] {
   }
   
   .sbtna.active {
-    color: #FFA500; /* Оранжевый цвет для активного фильтра */
+    color: #f24b1f; /* Оранжевый цвет для активного фильтра */
     height: 27px;
     background-color: transparent;
     cursor: pointer;
@@ -520,7 +530,7 @@ input[type="search"] {
     border-radius: 10px;
     padding: 6px;
     margin-top: 5px;
-    border: 1px solid #FFA500;
+    border: 1px solid #f24b1f;
   }
   
   .card {
@@ -667,25 +677,21 @@ ul {
   }
   
   .filtr-btn.active {
-    border: 1px solid #d87700;
+    border: 1px solid #f24b1f;
   }
 
 
   .close-btn {
-  position: relative;
-  display: flex;
-  height: 35px;
-  width: 35px;
-  background-color: #37373787;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px 1px 10px 1px;
-  top: -2px;
+    position: relative;
+    padding-top: 44px;
+    display: flex;
+    height: 50px;
+    width: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 1px 10px 1px;
+    border: 1px solid transparent;
 }
-  
-  .close-btn.active {
-      border: 1px solid #d87700;
-    }
 
 
   /*----------------------------------------------------------------*/
@@ -720,28 +726,30 @@ ul {
   }
 
   .listclosebtn {
-  position: fixed;
-  display: flex;
-  left: 85%;
-  padding-top: 10px;
-  top: 28px;
-  height: 35px;
-  transform: translate(-50%, -50%);
-  background-color: #4646468c;
-  width: 35px;
-  border-radius: 13px;
-  justify-content: center;
+    position: fixed;
+    display: flex;
+    top: 29px;
+    padding-top: 7px;
+    right: 10px;
+    height: 35px;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    border-radius: 16px;
+    justify-content: center;
+    align-items: center;
+    background-color: #242424;
   }
 
   .listclose-btn {
-  position: relative;
-  display: flex;
-  height: 50px;
-  width: 50px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px 1px 10px 1px;
-  border: 1px solid transparent;
+    position: relative;
+    padding-top: 44px;
+    display: flex;
+    height: 50px;
+    width: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 1px 10px 1px;
+    border: 1px solid transparent;
   }
 
   
@@ -757,7 +765,7 @@ ul {
 }
   
   .lbtna.active {
-    color: #FFA500; /* Оранжевый цвет для активного фильтра */
+    color: #f24b1f; /* Оранжевый цвет для активного фильтра */
     height: 27px;
     background-color: transparent;
     cursor: pointer;
@@ -767,7 +775,7 @@ ul {
   }
   
   .listclose-btn.active {
-    color: #FFA500; /* Оранжевый цвет для активного фильтра */
+    color: #f24b1f; /* Оранжевый цвет для активного фильтра */
   }
 
   .list {
@@ -781,8 +789,11 @@ ul {
   .listseasons {
     position: relative;
     display: grid;
+    min-height: 100px;
+    max-height: 300px;
     padding-top: 12px;
     grid-template-columns: repeat(auto-fill,minmax(70px,1fr));
+    overflow: auto;
   }
   
 /* Скрываем ползунок прокрутки в WebKit-браузерах (Chrome, Safari) */
@@ -1028,7 +1039,7 @@ mm {
   
 
   mm li.activetis  ion-icon {
-    color: #d87700;
+    color: #f24b1f;
   }
 
 
@@ -1061,23 +1072,22 @@ mm {
 
   .listclosebtn {
     position: fixed;
-    display: block;
-    left: 50%;
-    padding-top: 10px;
-    top: 0px;
-    height: 31px;
+    display: flex;
+    top: 29px;
+    padding-top: 7px;
+    right: 10px;
+    height: 35px;
     transform: translate(-50%, -50%);
-}
-
-.listseasons {
-    position: relative;
-    display: grid;
-    padding-top: 12px;
-    grid-template-columns: repeat(auto-fill,minmax(70px,1fr));
-}
+    width: 35px;
+    border-radius: 16px;
+    justify-content: center;
+    align-items: center;
+    background-color: #242424;
+  }
 
   .listclose-btn {
     position: relative;
+    padding-top: 44px;
     display: flex;
     height: 50px;
     width: 50px;
@@ -1085,28 +1095,44 @@ mm {
     align-items: center;
     border-radius: 10px 1px 10px 1px;
     border: 1px solid transparent;
+  }
+
+.listseasons {
+    position: relative;
+    display: grid;
+    padding-top: 12px;
+    min-height: 100px;
+    max-height: 300px;
+    grid-template-columns: repeat(auto-fill,minmax(70px,1fr));
+    overflow: auto;
 }
 
 .closebtn {
-  position: relative;
-  display: block;
-  left: 97.5%;
-  top: 60%;
-  height: 31px;
+  position: fixed;
+  display: flex;
+  top: 29px;
+  padding-top: 7px;
+  right: 10px;
+  height: 35px;
   transform: translate(-50%, -50%);
+  width: 35px;
+  border-radius: 16px;
+  justify-content: center;
+  align-items: center;
+  background-color: #242424;
 }
 
 .close-btn {
   position: relative;
-  display: flex;
-  height: 35px;
-  width: 45px;
-  background-color: #37373787;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px 1px 10px 1px;
-  border: 1px solid transparent;
-}
+        padding-top: 44px;
+        display: flex;
+        height: 50px;
+        width: 50px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px 1px 10px 1px;
+        border: 1px solid transparent;
+    }
 
 }
 
