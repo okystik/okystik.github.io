@@ -467,11 +467,11 @@ input[type="search"] {
     display: flex;
     top: 29px;
     padding-top: 7px;
-    right: 10px;
+    right: -4px;
     height: 35px;
     transform: translate(-50%, -50%);
     width: 35px;
-    border-radius: 16px;
+    border-radius: 6px;
     justify-content: center;
     align-items: center;
     background-color: #242424;
@@ -482,7 +482,7 @@ input[type="search"] {
 
 
   .fbtn {
-    margin-top: 40px;
+    margin-top: 55px;
     margin-bottom: 20px;
     width: 100%;
     overflow: auto;
