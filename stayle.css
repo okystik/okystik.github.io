@@ -699,7 +699,7 @@ ul {
 
 
   /*----------------------------------------------------------------*/
-  /*---------Настройка карточек и выборки серий с сезоном-----------*/
+  /*------------Настройка карточек и выборки серий -----------------*/
   /*----------------------------------------------------------------*/
 
   .list-main {
@@ -809,27 +809,76 @@ ul {
 
 .listseasonsmain {
   position: relative;
-  margin-top:40px;
   width: 100%;
-  height: 90%;
+  height: 68%;
   left: 2px;
   overflow: auto;
+  margin-top: 49px;
 }
 
 .spacelist {
-position: fixed;
-display: flex;
-top: 55px;
-padding-top: 3px;
-height: 1px;
-width: 70%;
-border-radius: 6px;
-justify-content: center;
-align-items: center;
-background-color: #242424;
-transform: translateX(-50%);
-left: 50%;
+  position: fixed;
+  display: flex;
+  top: 55px;
+  padding-top: 3px;
+  height: 1px;
+  width: 70%;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  background-color: #242424;
+  transform: translateX(-50%);
+  left: 50%;
 }
+
+  /*----------------------------------------------------------------*/
+  /*-------------------Настройка выбора сезона----------------------*/
+  /*----------------------------------------------------------------*/
+
+
+
+.sezonlist {
+  position: absolute;
+  width: auto;
+  left: 13px;
+  bottom: 8px;
+  max-width: 400px;
+  top: 4px;
+}
+
+.sezonlistswicher {
+  position: relative;
+  display: flex;
+}
+
+.sbtn {
+  width: 35px;
+  height: 35px;
+  background-color: #242424;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 8px;
+  border: transparent;
+  color: #fff;
+  font-size: 14px;
+  margin-right: 3px;
+}
+
+.sbtn-active {
+  background-color: #f24b1f; /* Стиль активной кнопки */
+}
+
+.listseasons {
+  display: none; /* Скрываем все блоки по умолчанию */
+}
+.activebtn {
+  display: block; /* Показываем активный блок */
+}
+
+.bw {
+  filter: grayscale(100%);
+}
+
 
   /*----------------------------------------------------------------*/
   /*----------------------Настройка карточек------------------------*/
@@ -1121,7 +1170,6 @@ mm {
 
 .listseasons {
     position: relative;
-    display: grid;
     padding-top: 12px;
     min-height: 100px;
     max-height: 300px;
