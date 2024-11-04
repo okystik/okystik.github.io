@@ -114,6 +114,7 @@
 
           <div class="listseasonsmain">
            <div class="listseasons" data_click="1сезон">
+            <spaner class="spaner">1 СЕЗОН :</spaner>
               <button class="lbtna" data-url="https://t.me/anime_60_fps/3495">1 серия</button>
               <button class="lbtna" data-url="https://t.me/anime_60_fps/3496">2 серия</button>
               <button class="lbtna" data-url="https://t.me/anime_60_fps/3498">3 серия</button>
@@ -623,24 +624,13 @@ document.addEventListener('touchend', function(event) {
         // Функция для скрытия всех блоков и показа только нужного
         function showSeason(season) {
             seasons.forEach(s => {
-                s.classList.remove('activebtn');
-                if (s.getAttribute('data_click') === season) {
-                    s.classList.add('activebtn');
-                }
+                s.classList.toggle('activebtn', s.getAttribute('data_click') === season);
             });
         }
 
         // Функция для обновления стиля кнопок
         function updateButtonStyles(activeButton) {
-            // Убираем активный стиль у всех кнопок
-            buttons.forEach(button => {
-                button.classList.remove('sbtn-active');
-            });
-
-            // Если нажата другая кнопка, добавляем ей активный стиль
-            if (activeButton) {
-                activeButton.classList.add('sbtn-active');
-            }
+            buttons.forEach(button => button.classList.toggle('sbtn-active', button === activeButton));
         }
 
         // Обработчик клика на кнопки
@@ -655,14 +645,13 @@ document.addEventListener('touchend', function(event) {
         // По умолчанию показываем 1 сезон и задаем стиль активным кнопкам
         const defaultSeason = '1сезон';
         showSeason(defaultSeason);
-
-        // Устанавливаем активный стиль для всех кнопок с 1сезон
-        const activeButtons = Array.from(buttons).filter(button => button.getAttribute('data-click') === defaultSeason);
-        activeButtons.forEach(button => {
-            button.classList.add('sbtn-active');
-        });
+        const defaultButton = document.querySelector(`.sbtn[data-click="${defaultSeason}"]`);
+        if (defaultButton) {
+            updateButtonStyles(defaultButton); // Устанавливаем активный стиль для кнопки по умолчанию
+        }
     });
 </script>
+
 
 
 

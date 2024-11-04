@@ -835,7 +835,17 @@ ul {
   /*-------------------Настройка выбора сезона----------------------*/
   /*----------------------------------------------------------------*/
 
-
+.spaner {
+  position: relative;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: #cccccc;
+  width: 100%;
+  height: 30px;
+  font-family: emoji;
+  background: linear-gradient(165deg, #f24b1f6e, transparent 20%);
+}
 
 .sezonlist {
   position: absolute;
