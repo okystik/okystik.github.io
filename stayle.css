@@ -858,8 +858,8 @@ ul {
 
 .sezonlistswicher {
   position: relative;
-  max-width: 50px;
-  min-width: 40px;
+  max-width: 190px;
+  min-width: 55px;
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
