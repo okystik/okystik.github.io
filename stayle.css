@@ -403,8 +403,6 @@ input[type="search"] {
   /*----------------Настройка кнопки фильтров меню------------------*/
   /*----------------------------------------------------------------*/
 
-
-
   .upnavbarbtn {
     display: block;
     width: 460px;
@@ -843,8 +841,8 @@ ul {
   color: #cccccc;
   width: 100%;
   height: 30px;
-  font-family: revert;
-  background: linear-gradient(165deg, #f24b1f6e, transparent 20%);
+  font-family: emoji;
+  background: linear-gradient(165deg, #f24b1f30, transparent 20%);
 }
 
 .sezonlist {
@@ -858,11 +856,7 @@ ul {
 
 .sezonlistswicher {
   position: relative;
-  max-width: 190px;
-  min-width: 55px;
-  width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
+  display: flex;
 }
 
 .sbtn {
@@ -913,13 +907,13 @@ ul {
 .rating {
   position: absolute;
   display: flex;
-  top: 6px;
-  right: 5px;
-  background-color: var(--color-glass);
-  backdrop-filter: blur(12px);
-  width: 37px;
+  top: -1px;
+  right: -3px;
+  background-color: #111111;
+  width: 49px;
+  height: 26px;
   justify-content: center;
-  border-radius: 9px;
+  border-radius: 0px 0px 0px 12px;
 }
 
 .ml-rating {
@@ -951,7 +945,7 @@ ul {
 .rating .ml-rating[data-rating^="3.7"],
 .rating .ml-rating[data-rating^="3.8"],
 .rating .ml-rating[data-rating^="3.9"] {
-  color: #bb2c01;
+  color: #e68200;
 }
 
 .rating .ml-rating[data-rating^="4"],
