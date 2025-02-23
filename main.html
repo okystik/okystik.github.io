@@ -53,6 +53,9 @@
                      <button class="fbtna" data-janr="школа" 
                      onclick="filterCards('школа')">Школа</button>
 
+                     <button class="fbtna" data-janr="гонки" 
+                     onclick="filterCards('гонки')">Гонки</button>
+
                      <button class="fbtna" data-janr="время" 
                      onclick="filterCards('время')">Путешествия во времени</button>
 
@@ -123,6 +126,63 @@
        <div class="cards">
 
 
+
+<!-- начало ячейки Севшие на хвост(Хвостовые)-->
+<div class="card visible" onclick="toggleListSort()" >
+  <div class="containercard">
+      <img src="./img/tailуndirs.jpg" class="b">  <!-- bw-черно-белая картинка -->
+    <div class="rating">
+              <p class="ml-rating" data-rating="4.1"></p>
+          </div>
+      </div>
+      <div class="details">
+          <h3>Севшие на хвост(Хвостовые)</h3>
+          <div data-name="Севшие на хвост(Хвостовые)"></div>
+          <div data-janr="приключения"></div>
+          <div data-janr="фантастика"></div>
+          <div data-janr="гонки"></div>
+          <div data-janr=""></div>
+          <div data-janr=""></div>
+      </div>
+      <div class="list">
+
+        <div class="list-backround">
+          <div class="list-main">
+
+          <div class="sezonlist">
+              <div class="sezonlistswicher">
+                  <button class="sbtn" data-click="1сезон">Фильм</button>
+              </div>
+          </div>
+
+          <div class="listseasonsmain">
+           <div class="listseasons" data_click="1сезон">
+            <spaner class="spaner">Фильм </spaner>
+              <button class="lbtna" data-url="https://t.me/anime_60_fps/3495">Фильм</button>
+            </div>
+
+
+          </div>
+
+
+
+
+
+          
+            <div class="listclosebtn">
+              <ul>
+                 <li id="listclose-btn" class="listclose-btn"  onclick="toggleListSort()"><ion-icon name="close" >
+                 </ion-icon></li>
+              </ul>
+            </div> 
+
+           <div class="spacelist"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- конец ячейки -->        
 
 <!-- начало ячейки Магическая битва -->
 <div class="card visible" onclick="toggleListSort()" >
