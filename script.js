@@ -49,20 +49,19 @@ document.querySelectorAll('mm li').forEach(li => {
   });
 });
 
-// Обработчик для кнопки доната с отладкой
+
+// Обработчик для кнопки доната
 document.addEventListener('DOMContentLoaded', function() {
-  const donateBtn = document.getElementById('donate-btn');
-  if (donateBtn) {
-    console.log('Donate button found in DOM');
-    donateBtn.addEventListener('click', function(event) {
-      console.log('Donate button clicked');
-      event.stopPropagation(); // Останавливаем распространение события
-      event.preventDefault(); // Предотвращаем дефолтное поведение
-      window.location.href = 'https://pay.cloudtips.ru/p/5a2c8063'; // Переход по ссылке
-      // Альтернатива: window.open('https://pay.cloudtips.ru/p/5a2c8063', '_blank');
+  const donateButton = document.querySelector('.donate-button');
+  if (donateButton) {
+    donateButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'https://pay.cloudtips.ru/p/5a2c8063';
+      // Альтернативный вариант для открытия в новой вкладке:
+      // window.open('https://pay.cloudtips.ru/p/5a2c8063', '_blank');
     });
   } else {
-    console.error('Donate button with id "donate-btn" not found');
+    console.error('Donate button not found');
   }
 });
 
