@@ -3,244 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - Облачный профиль и Синхронизация</title>
-
-    <!-- Telegram WebApp SDK -->
+    <title>Тест - Настоящая авторизация Telegram</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: sans-serif;
-            margin: 0;
-            padding: 16px;
-        }
-
-        .card {
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: #f24b1f;
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .sync-badge {
-            background: #2e7d32;
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            float: right;
-        }
-
-        .impersonate-box {
-            background: #252525;
-            border: 1px dashed #f24b1f;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 6px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #111;
-            color: #fff;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #f24b1f;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 8px;
-        }
-
-        button.secondary {
-            background: #444;
-        }
-
-        .banner {
-            background: #ff9800;
-            color: #000;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        ul {
-            padding-left: 20px;
-            margin: 8px 0;
-        }
-
-        li {
-            margin-bottom: 4px;
-            color: #ccc;
-        }
-
-        .loader {
-            color: #888;
-            font-size: 12px;
-            font-style: italic;
-        }
+        body { background-color: #121212; color: #fff; font-family: sans-serif; padding: 16px; margin: 0; }
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .badge { background: #2e7d32; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .badge-admin { background: #d32f2f; }
+        .banner { background: #ff9800; color: #000; padding: 8px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; text-align: center; }
+        input { width: calc(100% - 22px); padding: 10px; margin: 6px 0 10px; border-radius: 6px; border: 1px solid #444; background: #111; color: #fff; }
+        button { width: 100%; padding: 10px; background: #f24b1f; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+        button.secondary { background: #444; }
     </style>
 </head>
 <body>
 
-    <!-- Баннер режима просмотра другого пользователя -->
     <div id="view-banner" class="banner" style="display: none;">
-        👀 Режим просмотра чужого аккаунта
+        👀 Просмотр за другого пользователя
     </div>
 
-    <!-- Блок аккаунта -->
     <div class="card">
-        <span id="sync-status" class="sync-badge">☁️ Облако активен</span>
-        <h3>Профиль пользователя</h3>
-        <p><strong>Telegram ID:</strong> <span id="user-id">...</span></p>
-        <p><strong>Никнейм:</strong> <span id="user-name">...</span></p>
-        <p><strong>Роль:</strong> <span class="status-badge" id="user-status">...</span></p>
+        <span id="auth-badge" class="badge">🔒 Настоящий аккаунт</span>
+        <h3>Ваш профиль</h3>
+        <p><strong>Подлинный Telegram ID:</strong> <span id="real-tg-id">Загрузка...</span></p>
+        <p><strong>Просматриваемый ID:</strong> <span id="target-tg-id">Загрузка...</span></p>
+        <p><strong>Права Администратора:</strong> <span id="admin-status">...</span></p>
     </div>
 
-    <!-- Симуляция просмотра контента -->
     <div class="card">
-        <h3>Действие: Добавить просмотр</h3>
-        <button onclick="addWatchHistory('Посмотрел аниме «Атака Титанов»', '101')">+ «Атака Титанов» (Смотрит)</button>
-        <button onclick="addWatchHistory('Посмотрел аниме «Наруто»', '102')">+ «Наруто» (Просмотрено)</button>
-        
-        <h4>Облачная история просмотров (<span id="history-count">0</span>):</h4>
-        <ul id="history-list">
-            <li class="loader">Загрузка данных с сервера...</li>
-        </ul>
-        <button class="secondary" onclick="clearHistory()">Очистить историю пользователя</button>
+        <h3>Действия и Синхронизация</h3>
+        <button onclick="addWatchHistory('Посмотрел аниме «Блич»', '103')">+ «Блич»</button>
+        <h4>История:</h4>
+        <ul id="history-list"><li>Загрузка с сервера...</li></ul>
+        <button class="secondary" onclick="clearHistory()">Очистить историю</button>
     </div>
 
-    <!-- Переключение пользователей (Тест / Админка) -->
-    <div class="impersonate-box">
-        <h3>Посмотреть за другого юзера</h3>
-        <input type="text" id="target-id" placeholder="Введи Telegram ID (например: 77777)">
-        
-        <button onclick="switchUser()">Смотреть профиль из базы</button>
-        <button class="secondary" onclick="resetUser()">Вернуться в свой аккаунт</button>
+    <div id="admin-panel" class="card" style="display: none;">
+        <h3>Режим Админа: Посмотреть чужой профиль</h3>
+        <input type="text" id="target-id" placeholder="Введи чужой TG ID">
+        <button onclick="switchUser()">Загрузить профиль юзера</button>
+        <button class="secondary" onclick="resetUser()">Сбросить на свой ID</button>
     </div>
 
     <script>
-        // Ссылка на ваше Yandex Cloud Function API
-        const API_URL = 'YOUR_YANDEX_CLOUD_FUNCTION_URL'; 
+        const API_URL = 'YOUR_YANDEX_CLOUD_FUNCTION_URL'; // Вставьте ссылку на функцию
 
-        // 1. Инициализация Telegram WebApp
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
         }
 
-        // Получение собственного TG ID
-        function getMyId() {
-            if (tg?.initDataUnsafe?.user?.id) {
-                return tg.initDataUnsafe.user.id.toString();
-            }
-            let myId = localStorage.getItem('my_tg_id');
-            if (!myId) {
-                myId = '100001'; // Дефолтный ID для тестов в обычном браузере
-                localStorage.setItem('my_tg_id', myId);
-            }
-            return myId;
+        let currentUserState = { items: {}, history: [], anime_titles: {}, message_id: null };
+        let isUserAdmin = false;
+
+        // Получаем сырой зашифрованный подлинный initData от Telegram
+        function getInitData() {
+            return tg?.initData || "";
         }
 
-        const myTgId = getMyId();
+        async function syncLoad() {
+            const viewAsId = localStorage.getItem('view_as_id');
 
-        // Текущий активный ID (свой или чужой)
-        function getActiveId() {
-            return localStorage.getItem('view_as_id') || myTgId;
-        }
-
-        // Кэш текущих данных в памяти
-        let currentUserState = {
-            items: {},
-            history: [],
-            anime_titles: {},
-            message_id: null
-        };
-
-        // 2. Логика синхронизации с бэкендом (Яндекс Облако)
-        async function fetchUserData(tgId) {
-            document.getElementById('sync-status').innerText = '🔄 Загрузка...';
             try {
-                // Пытаемся получить данные с бэкенда
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'load',
-                        user_id: tgId
+                        initData: getInitData(),
+                        view_as_id: viewAsId
                     })
                 });
 
-                const resData = await response.json();
-                if (resData.success && resData.data) {
-                    currentUserState = {
-                        items: resData.data.items || {},
-                        history: resData.data.history || [],
-                        anime_titles: resData.data.titles || {},
-                        message_id: resData.data.message_id || null
-                    };
+                const res = await response.json();
+
+                if (!res.success) {
+                    alert("Ошибка авторизации: " + res.error);
+                    return;
                 }
-                document.getElementById('sync-status').innerText = '☁️ Синхронизировано';
-            } catch (err) {
-                console.warn("Ошибка связи с сервером, берем локальный кэш:", err);
-                // Фолбэк на localStorage
-                const localData = localStorage.getItem(`user_cloud_data_${tgId}`);
-                if (localData) {
-                    currentUserState = JSON.parse(localData);
-                }
-                document.getElementById('sync-status').innerText = '⚠️ Автономный режим';
+
+                // Отображаем настоящие проверенные данные
+                document.getElementById('real-tg-id').innerText = res.real_user_id;
+                document.getElementById('target-tg-id').innerText = res.target_user_id;
+                document.getElementById('admin-status').innerText = res.is_admin ? "ДА (Доступен режим просмотра)" : "НЕТ";
+                
+                isUserAdmin = res.is_admin;
+                document.getElementById('admin-panel').style.display = isUserAdmin ? 'block' : 'none';
+                document.getElementById('view-banner').style.display = (res.real_user_id !== res.target_user_id) ? 'block' : 'none';
+
+                currentUserState = res.data;
+                renderUI();
+
+            } catch (e) {
+                console.error("Ошибка загрузки:", e);
             }
         }
 
-        async function saveUserData() {
-            const activeId = getActiveId();
-            document.getElementById('sync-status').innerText = '⏳ Сохранение...';
-
-            // Сохраняем локальный кэш сразу
-            localStorage.setItem(`user_cloud_data_${activeId}`, JSON.stringify(currentUserState));
-
-            // Телеграм WebApp CloudStorage (для дополнительного резерва прямо в аккаунт ТГ)
-            if (tg?.CloudStorage && activeId === myTgId) {
-                tg.CloudStorage.setItem('user_history', JSON.stringify(currentUserState.history));
-            }
+        async function syncSave() {
+            const viewAsId = localStorage.getItem('view_as_id');
 
             try {
-                const tgName = tg?.initDataUnsafe?.user?.username || `user_${activeId}`;
-                
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'save',
-                        user_id: activeId,
-                        user_name: `@${tgName}`,
+                        initData: getInitData(),
+                        view_as_id: viewAsId,
                         items: currentUserState.items,
                         history: currentUserState.history,
                         anime_titles: currentUserState.anime_titles,
@@ -248,101 +118,53 @@
                     })
                 });
 
-                const resData = await response.json();
-                if (resData.success && resData.message_id) {
-                    currentUserState.message_id = resData.message_id;
+                const res = await response.json();
+                if (res.success && res.message_id) {
+                    currentUserState.message_id = res.message_id;
                 }
-                document.getElementById('sync-status').innerText = '☁️ Сохранено в облако';
-            } catch (err) {
-                console.error("Ошибка сохранения на сервер:", err);
-                document.getElementById('sync-status').innerText = '❌ Ошибка сохранения';
+            } catch (e) {
+                console.error("Ошибка сохранения:", e);
             }
         }
 
-        // 3. Отрисовка UI
-        async function renderPage() {
-            const activeId = getActiveId();
-            const isOtherUser = activeId !== myTgId;
-
-            // Индикатор режима
-            document.getElementById('view-banner').style.display = isOtherUser ? 'block' : 'none';
-            document.getElementById('user-id').innerText = activeId;
-
-            if (isOtherUser) {
-                document.getElementById('user-name').innerText = `@user_${activeId}`;
-                document.getElementById('user-status').innerText = "Просмотр чужого профиля";
-            } else {
-                const tgName = tg?.initDataUnsafe?.user?.username;
-                document.getElementById('user-name').innerText = tgName ? `@${tgName}` : `@user_${myTgId}`;
-                document.getElementById('user-status').innerText = "Владелец";
-            }
-
-            // Загружаем актуальные данные из облака
-            await fetchUserData(activeId);
-            renderHistoryUI();
-        }
-
-        function renderHistoryUI() {
-            const listElement = document.getElementById('history-list');
+        function renderUI() {
+            const list = document.getElementById('history-list');
             const history = currentUserState.history || [];
-
-            document.getElementById('history-count').innerText = history.length;
-
             if (history.length === 0) {
-                listElement.innerHTML = '<li>История просмотра пуста</li>';
+                list.innerHTML = '<li>История пуста</li>';
                 return;
             }
-
-            listElement.innerHTML = history.map(item => `
-                <li>${item.title} <small style="color: #777;">(${item.time})</small></li>
-            `).join('');
+            list.innerHTML = history.map(i => `<li>${i.title} <small>(${i.time})</small></li>`).join('');
         }
 
-        // 4. Действия пользователя (с автосохранением в Облако)
-        async function addWatchHistory(title, animeId) {
-            const newItem = {
-                title: title,
-                time: new Date().toLocaleTimeString('ru-RU')
-            };
-
-            currentUserState.history.unshift(newItem);
-
-            // Также сохраняем/обновляем статус в библиотеке
-            currentUserState.items[animeId] = {
-                is_fav: true,
-                status: 'watching',
-                rating: 9
-            };
-            currentUserState.anime_titles[animeId] = title.replace('Посмотрел аниме ', '');
-
-            renderHistoryUI();
-            await saveUserData();
+        async function addWatchHistory(title, id) {
+            currentUserState.history.unshift({ title, time: new Date().toLocaleTimeString('ru-RU') });
+            currentUserState.items[id] = { is_fav: true, status: 'watching', rating: 10 };
+            currentUserState.anime_titles[id] = title;
+            renderUI();
+            await syncSave();
         }
 
         async function clearHistory() {
             currentUserState.history = [];
             currentUserState.items = {};
-            renderHistoryUI();
-            await saveUserData();
+            renderUI();
+            await syncSave();
         }
 
-        // 5. Переключение пользователей
         async function switchUser() {
-            const inputId = document.getElementById('target-id').value.trim();
-            if (!inputId) return alert("Введи Telegram ID!");
-
-            localStorage.setItem('view_as_id', inputId);
-            document.getElementById('target-id').value = '';
-            await renderPage();
+            const id = document.getElementById('target-id').value.trim();
+            if (!id) return;
+            localStorage.setItem('view_as_id', id);
+            await syncLoad();
         }
 
         async function resetUser() {
             localStorage.removeItem('view_as_id');
-            await renderPage();
+            await syncLoad();
         }
 
-        // Запуск
-        document.addEventListener('DOMContentLoaded', renderPage);
+        document.addEventListener('DOMContentLoaded', syncLoad);
     </script>
 </body>
 </html>
