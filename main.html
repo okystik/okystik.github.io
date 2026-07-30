@@ -121,9 +121,12 @@
 
 <div class="main" id="main" style="display: block;">
     <div class="filtrcard" id="filtrcard">
-        <div class="filtr-btn" onclick="changeCard('maincardvishli')">Главная</div>
+        <div class="filtr-btn active" onclick="changeCard('maincardvishli')">Главная</div>
         <div class="filtr-btn" onclick="changeCard('maincardnovie')">Новинки</div>
+        <!-- Прямая ссылка на test.html -->
+        <a href="test.html" class="filtr-btn" style="text-decoration: none; color: inherit;">Тест</a>
     </div>
+
     <div class="donate-panel">
         <div class="donate-content">
             <div class="donate-text">Поддержка в этом году</div>
@@ -131,6 +134,20 @@
             <button class="donate-button">Поддержать проект</button>
         </div>
     </div>
+
+    <!-- Контейнеры только для Главной и Новинок -->
+    <div class="maincard maincardvishli" id="maincardvishli" style="display: block;">
+        <div class="cards">
+            <!-- Карточки Главной -->
+        </div>
+    </div>
+
+    <div class="maincard maincardnovie" id="maincardnovie" style="display: none;">
+        <div class="cards">
+            <!-- Карточки Новинок -->
+        </div>
+    </div>
+</div>
 
 
 <div id="maincardvishli" class="maincard" style="display:block;">
@@ -140,7 +157,7 @@
 <!-- начало ячейки Великая небесная стена  -->
 <div class="card visible" onclick="toggleListSort()" >
   <div class="containercard">
-      <img src="./img/vilikayastena.jpg">
+      <img src="./img/gurren.jpg">
     <div class="rating">
               <p class="ml-rating" data-rating="4.1"></p>
           </div>
@@ -6017,6 +6034,8 @@
 
           <div class="spacelist"></div>
 
+
+          
 </div>
 </div>
 </div>
