@@ -3,342 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аниме Навигатор</title>
-    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
+    <title>Тестовая страница - Профиль</title>
+
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #121212;
             color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
+            font-family: sans-serif;
             margin: 0;
+            padding: 20px;
         }
-
-        /* Карточка профиля */
-        .user-card {
-            background: #252525;
-            padding: 12px 16px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 380px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid #333;
-        }
-
-        .user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #0088cc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            overflow: hidden;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .user-name { font-weight: bold; font-size: 15px; }
-        .user-id { font-size: 12px; color: #888; }
 
         .card {
             background: #1e1e1e;
-            border-radius: 16px;
-            padding: 16px 20px;
-            max-width: 380px;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            margin-bottom: 16px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        h2 { margin: 0; font-size: 18px; }
-
-        .fav-btn {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .global-score {
-            font-size: 14px;
-            font-weight: bold;
-            color: #ffcc00;
-            background: #282415;
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin: 10px 0;
+        .status-badge {
             display: inline-block;
+            background: #f24b1f;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
         }
 
-        .controls-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
+        .impersonate-box {
+            background: #252525;
+            border: 1px dashed #f24b1f;
+            border-radius: 12px;
+            padding: 16px;
         }
 
-        .status-select {
-            background: #2a2a2a;
-            color: #ddd;
-            border: 1px solid #444;
-            padding: 6px 10px;
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 12px;
             border-radius: 6px;
-            font-size: 13px;
+            border: 1px solid #444;
+            background: #111;
+            color: #fff;
         }
 
-        .rating-buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-        }
-
-        .rating-buttons button {
-            background: #0088cc;
-            color: #ffffff;
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #f24b1f;
+            color: #fff;
             border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button.secondary {
+            background: #444;
+            margin-top: 8px;
+        }
+
+        .banner {
+            background: #ff9800;
+            color: #000;
             padding: 8px;
             border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        #status {
-            position: fixed;
-            bottom: 20px;
-            background: #222;
-            padding: 10px 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             font-size: 13px;
-            border: 1px solid #444;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
-    <div class="user-card">
-        <div class="user-avatar" id="avatar-box">👤</div>
-        <div class="user-info">
-            <div class="user-name" id="user-name-display">Загрузка...</div>
-            <div class="user-id" id="user-id-display">ID: —</div>
-        </div>
+    <!-- Баннер, если смотрим чужой аккаунт -->
+    <div id="view-banner" class="banner" style="display: none;">
+        👀 Режим просмотра другого пользователя
     </div>
 
-    <!-- СПИСОК АНИМЕ -->
-    <div id="anime-list-container" style="width: 100%; max-width: 380px;"></div>
+    <!-- Карточка пользователя -->
+    <div class="card">
+        <h3>Мой Профиль</h3>
+        <p><strong>Telegram ID:</strong> <span id="user-id">Загрузка...</span></p>
+        <p><strong>Никнейм:</strong> <span id="user-name">Загрузка...</span></p>
+        <p><strong>Статус:</strong> <span class="status-badge" id="user-status">Игрок</span></p>
+        <p><strong>Рейтинг:</strong> <span id="user-rating">100</span> PTS</p>
+    </div>
 
-    <div id="status">Готов к работе</div>
+    <!-- Панель "Посмотреть за другого" -->
+    <div class="impersonate-box">
+        <h3>Посмотреть за другого юзера</h3>
+        <label for="target-id">Введи Telegram ID пользователя:</label>
+        <input type="text" id="target-id" placeholder="Например: 987654321">
+        
+        <button onclick="switchUser()">Смотреть профиль</button>
+        <button class="secondary" onclick="resetUser()">Вернуться в свой аккаунт</button>
+    </div>
 
     <script>
-        const YANDEX_URL = 'https://functions.yandexcloud.net/d4evib2sgptv8r0rvtht';
-
-        const ANIME_DATA = [
-            { id: '101', name: '🎬 Наруто' },
-            { id: '102', name: '⚔️ Атака Титанов' },
-            { id: '103', name: '🔮 Магическая Битва' },
-            { id: '104', name: '🏴‍☠️ Ван-Пис' },
-            { id: '105', name: '🧪 Стальной Алхимик' }
-        ];
-
-        const STATUSES = {
-            'none': '🚫 Не указано',
-            'watching': '👀 Смотрю',
-            'completed': '✅ Просмотрено',
-            'planned': '📌 В планах',
-            'dropped': '❌ Брошено',
-            'rewatching': '🔄 Пересматриваю'
-        };
-
-        // ТЕКУЩИЙ ПОЛЬЗОВАТЕЛЬ ТЕЛЕГРАМА
-        let currentUser = {
-            id: 'test_pc_user',
-            name: 'Тестовый Игрок',
-            photo: null
-        };
-
-        // Проверяем Telegram WebApp API
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        // Инициализация Telegram
+        const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
-            tg.expand(); // Разворачиваем приложение на весь экран
-
-            // Если зашли из реального Телеграма — забираем настоящие данные аккаунта!
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const tgUser = tg.initDataUnsafe.user;
-                currentUser.id = tgUser.username ? `@${tgUser.username}` : `id_${tgUser.id}`;
-                currentUser.name = `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() || 'Пользователь';
-                currentUser.photo = tgUser.photo_url || null;
-            }
+            tg.expand();
         }
 
-        // Отображаем данные профиля в шапке
-        function initProfileUI() {
-            document.getElementById('user-name-display').innerText = currentUser.name;
-            document.getElementById('user-id-display').innerText = `ID: ${currentUser.id}`;
+        // 1. Определение текущего/своего TG ID
+        function getMyId() {
+            if (tg?.initDataUnsafe?.user?.id) {
+                return tg.initDataUnsafe.user.id.toString();
+            }
+            // Если открыто просто в браузере — сгенерируем/возьмем дефолтный ID
+            let myId = localStorage.getItem('my_tg_id');
+            if (!myId) {
+                myId = '100001'; 
+                localStorage.setItem('my_tg_id', myId);
+            }
+            return myId;
+        }
+
+        const myTgId = getMyId();
+
+        // 2. Отрисовка данных на странице
+        function renderProfile() {
+            // Проверяем, смотрим ли за кого-то другого
+            const activeId = localStorage.getItem('view_as_id') || myTgId;
+            const isOtherUser = activeId !== myTgId;
+
+            // Показываем/скрываем предупреждающий баннер
+            document.getElementById('view-banner').style.display = isOtherUser ? 'block' : 'none';
+
+            // Заполняем интерфейс данными
+            document.getElementById('user-id').innerText = activeId;
             
-            const avatarBox = document.getElementById('avatar-box');
-            if (currentUser.photo) {
-                avatarBox.innerHTML = `<img src="${currentUser.photo}" alt="avatar">`;
+            if (isOtherUser) {
+                document.getElementById('user-name').innerText = `@user_${activeId}`;
+                document.getElementById('user-status').innerText = "Гость (Просмотр)";
+                document.getElementById('user-rating').innerText = "250"; // Фейковые данные для теста
             } else {
-                avatarBox.innerText = currentUser.name.charAt(0).toUpperCase();
+                const tgName = tg?.initDataUnsafe?.user?.username;
+                document.getElementById('user-name').innerText = tgName ? `@${tgName}` : `@user_${myTgId}`;
+                document.getElementById('user-status').innerText = "Владелец";
+                document.getElementById('user-rating').innerText = "100";
             }
         }
 
-        // Хранилище оценок
-        let db = JSON.parse(localStorage.getItem('tg_app_db') || JSON.stringify({ users: {} }));
-        if (!db.users[currentUser.id]) {
-            db.users[currentUser.id] = { message_id: null, items: {} };
+        // 3. Переключиться на чужой ID
+        function switchUser() {
+            const inputId = document.getElementById('target-id').value.trim();
+            if (!inputId) return alert("Введи Telegram ID!");
+
+            localStorage.setItem('view_as_id', inputId);
+            document.getElementById('target-id').value = '';
+            renderProfile();
         }
 
-        function renderUI() {
-            const container = document.getElementById('anime-list-container');
-            container.innerHTML = '';
-
-            const currentUserItems = db.users[currentUser.id]?.items || {};
-
-            ANIME_DATA.forEach(anime => {
-                const userItem = currentUserItems[anime.id] || { rating: 0, status: 'none', is_fav: false };
-
-                // Считаем Средний Балл
-                let totalSum = 0;
-                let votesCount = 0;
-                for (const uId in db.users) {
-                    const r = db.users[uId].items[anime.id]?.rating;
-                    if (r && r > 0) {
-                        totalSum += Number(r);
-                        votesCount++;
-                    }
-                }
-                const avgScore = votesCount > 0 ? (totalSum / votesCount).toFixed(1) : '0.0';
-
-                const cardHtml = `
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>${anime.name}</h2>
-                            <button class="fav-btn" onclick="toggleFav('${anime.id}')">
-                                ${userItem.is_fav ? '❤️' : '🤍'}
-                            </button>
-                        </div>
-
-                        <div class="global-score">⭐ Средний балл: ${avgScore} (${votesCount} гол.)</div>
-
-                        <div class="controls-group">
-                            <select class="status-select" onchange="changeStatus('${anime.id}', this.value)">
-                                ${Object.entries(STATUSES).map(([key, val]) => 
-                                    `<option value="${key}" ${userItem.status === key ? 'selected' : ''}>${val}</option>`
-                                ).join('')}
-                            </select>
-
-                            <div class="rating-buttons">
-                                ${[2, 4, 6, 8, 10].map(num => `
-                                    <button style="${userItem.rating === num ? 'background: #4cd964;' : ''}" 
-                                            onclick="changeRating('${anime.id}', ${num})">${num}</button>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHtml;
-            });
-
-            localStorage.setItem('tg_app_db', JSON.stringify(db));
+        // 4. Вернуться в свой аккаунт
+        function resetUser() {
+            localStorage.removeItem('view_as_id');
+            renderProfile();
         }
 
-        function toggleFav(animeId) {
-            const item = getItem(animeId);
-            item.is_fav = !item.is_fav;
-            saveAndSync();
-        }
-
-        function changeStatus(animeId, statusKey) {
-            const item = getItem(animeId);
-            item.status = statusKey;
-            saveAndSync();
-        }
-
-        function changeRating(animeId, ratingValue) {
-            const item = getItem(animeId);
-            item.rating = item.rating === ratingValue ? 0 : ratingValue;
-            saveAndSync();
-        }
-
-        function getItem(animeId) {
-            if (!db.users[currentUser.id].items[animeId]) {
-                db.users[currentUser.id].items[animeId] = { rating: 0, status: 'none', is_fav: false };
-            }
-            return db.users[currentUser.id].items[animeId];
-        }
-
-        async function saveAndSync() {
-            renderUI();
-
-            const statusDiv = document.getElementById('status');
-            statusDiv.style.color = '#ffcc00';
-            statusDiv.innerText = `Сохранение в Telegram...`;
-
-            const userDbData = db.users[currentUser.id];
-
-            try {
-                const response = await fetch(YANDEX_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: currentUser.id,
-                        user_name: currentUser.name,
-                        message_id: userDbData.message_id,
-                        items: userDbData.items,
-                        anime_titles: Object.fromEntries(ANIME_DATA.map(a => [a.id, a.name]))
-                    })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    userDbData.message_id = result.message_id;
-                    localStorage.setItem('tg_app_db', JSON.stringify(db));
-                    
-                    statusDiv.style.color = '#4cd964';
-                    statusDiv.innerText = `Синхронизировано!`;
-                }
-            } catch (error) {
-                statusDiv.style.color = '#ff3b30';
-                statusDiv.innerText = 'Ошибка сохранения!';
-            }
-        }
-
-        // Запуск
-        initProfileUI();
-        renderUI();
+        // Запуск при открытии страницы
+        document.addEventListener('DOMContentLoaded', renderProfile);
     </script>
 </body>
 </html>
