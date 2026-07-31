@@ -3,67 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аниме Кинотеатр</title>
+    <title>Тест - Библиотека и Синхронизация</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
-        body { background: #121212; color: #fff; font-family: sans-serif; padding: 16px; margin: 0; }
-        
-        /* Экран блокировки для сторонних браузеров */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+        }
+
+        /* Шапка страницы */
+        .header-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            background: #2e7d32;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* Сетка Плиток Аниме */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 480px) {
+            .anime-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Карточка Плитки */
+        .anime-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .anime-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fav-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+        }
+
+        /* Кнопки статусов */
+        .status-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .status-btn {
+            padding: 8px;
+            font-size: 11px;
+            background: #2a2a2a;
+            color: #ccc;
+            border: 1px solid #444;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .status-btn.active-watching { background: #1976d2; color: #fff; border-color: #2196f3; }
+        .status-btn.active-completed { background: #2e7d32; color: #fff; border-color: #4caf50; }
+        .status-btn.active-planned { background: #ed6c02; color: #fff; border-color: #ff9800; }
+        .status-btn.active-dropped { background: #d32f2f; color: #fff; border-color: #f44336; }
+
+        /* Выбор Оценки */
+        .rating-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #141414;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        select {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* Экран предупреждения для внешних браузеров */
         .access-denied-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 85vh;
+            min-height: 80vh;
             text-align: center;
-            padding: 24px;
+            padding: 20px;
         }
-        .lock-icon { font-size: 64px; margin-bottom: 16px; }
-        .denied-title { font-size: 22px; font-weight: bold; color: #ff4d4d; margin-bottom: 12px; }
-        .denied-desc { font-size: 14px; color: #aaa; line-height: 1.6; max-width: 320px; }
 
-        /* Основное приложение Telegram */
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-        .badge { background: #2e7d32; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; float: right; }
-        button { width: 100%; padding: 14px; background: #f24b1f; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; font-size: 14px; }
-        button:active { transform: scale(0.98); }
-        button.secondary { background: #333; }
-        ul { padding-left: 20px; color: #ccc; }
-        li { margin-bottom: 6px; }
+        button.primary-btn {
+            width: 100%;
+            padding: 14px;
+            background: #f24b1f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. ЭКРАН БЛОКИРОВКИ (Виден ТОЛЬКО в обычных браузерах) -->
+    <!-- Экран если открыто вне Telegram -->
     <div id="access-denied-block" class="access-denied-screen" style="display: none;">
-        <div class="lock-icon">🔒</div>
-        <div class="denied-title">ДОСТУП ОГРАНИЧЕН</div>
-        <div class="denied-desc">
-            Настоящее приложение работает <b>исключительно во встроенном браузерe Telegram</b>.<br><br>
-            Пожалуйста, откройте чат с нашим Telegram-ботом и нажмите кнопку <b>«Отрыть Приложение»</b>.
-        </div>
+        <div style="font-size: 64px; margin-bottom: 16px;">🔒</div>
+        <h2 style="color: #ff4d4d; margin-bottom: 10px;">ВХОД ИЗ БРАУЗЕРА</h2>
+        <p style="color: #aaa; font-size: 14px; line-height: 1.5; max-width: 300px;">
+            Пожалуйста, откройте чат с нашим Ботом в Telegram и перейдите в приложение оттуда.
+        </p>
     </div>
 
-    <!-- 2. ОСНОВНОЙ ИНТЕРФЕЙС (Виден ТОЛЬКО из Telegram) -->
+    <!-- Основной интерфейс приложения -->
     <div id="main-app-block" style="display: none;">
-        <div class="card">
-            <span id="sync-status" class="badge">🔒 Telegram Вход</span>
-            <h3 style="margin-top: 0;">Ваш Профиль</h3>
-            <p><strong>Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold; font-size: 16px;">...</span></p>
-            <p><strong>Имя:</strong> <span id="user-name">...</span></p>
+        
+        <!-- Шапка -->
+        <div class="header-card">
+            <span id="sync-status" class="badge">⚡ Мгновенно</span>
+            <h3 style="margin: 0 0 8px 0;">Ваш Настоящий Профиль</h3>
+            <p style="margin: 4px 0;"><strong>Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold;">Определение...</span></p>
+            <p style="margin: 4px 0;"><strong>Пользователь:</strong> <span id="user-name">...</span></p>
         </div>
 
-        <div class="card">
-            <h3>Просмотр контента</h3>
-            <button onclick="addWatch('Посмотрел «Атака Титанов»')">+ «Атака Титанов»</button>
-            <button onclick="addWatch('Посмотрел «Наруто»')">+ «Наруто»</button>
-            <button onclick="addWatch('Посмотрел «Магическая битва»')">+ «Магическая битва»</button>
-            
-            <h4>Ваша история:</h4>
-            <ul id="history-list"><li>Загрузка...</li></ul>
+        <h3 style="margin-bottom: 12px;">📚 Плитки Каталога Аниме:</h3>
 
-            <button class="secondary" onclick="clearHistory()">Очистить историю</button>
+        <!-- Сетка Аниме Плиток -->
+        <div class="anime-grid">
+            
+            <!-- Плитка 1 -->
+            <div class="anime-card" id="card-101">
+                <div>
+                    <div class="anime-title">
+                        <span>Атака Титанов</span>
+                        <button class="fav-btn" onclick="toggleFav('101')">🤍</button>
+                    </div>
+                    <div class="status-group">
+                        <div class="status-btn" onclick="setStatus('101', 'watching')">👀 Смотрю</div>
+                        <div class="status-btn" onclick="setStatus('101', 'completed')">✅ Просмотрено</div>
+                        <div class="status-btn" onclick="setStatus('101', 'planned')">📌 В планах</div>
+                        <div class="status-btn" onclick="setStatus('101', 'dropped')">❌ Брошено</div>
+                    </div>
+                </div>
+                <div class="rating-box">
+                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
+                    <select onchange="setRating('101', this.value)">
+                        <option value="0">Без оценки</option>
+                        <option value="10">⭐ 10/10</option>
+                        <option value="9">⭐ 9/10</option>
+                        <option value="8">⭐ 8/10</option>
+                        <option value="7">⭐ 7/10</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Плитка 2 -->
+            <div class="anime-card" id="card-102">
+                <div>
+                    <div class="anime-title">
+                        <span>Наруто: Ураганные хроники</span>
+                        <button class="fav-btn" onclick="toggleFav('102')">🤍</button>
+                    </div>
+                    <div class="status-group">
+                        <div class="status-btn" onclick="setStatus('102', 'watching')">👀 Смотрю</div>
+                        <div class="status-btn" onclick="setStatus('102', 'completed')">✅ Просмотрено</div>
+                        <div class="status-btn" onclick="setStatus('102', 'planned')">📌 В планах</div>
+                        <div class="status-btn" onclick="setStatus('102', 'dropped')">❌ Брошено</div>
+                    </div>
+                </div>
+                <div class="rating-box">
+                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
+                    <select onchange="setRating('102', this.value)">
+                        <option value="0">Без оценки</option>
+                        <option value="10">⭐ 10/10</option>
+                        <option value="9">⭐ 9/10</option>
+                        <option value="8">⭐ 8/10</option>
+                        <option value="7">⭐ 7/10</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Плитка 3 -->
+            <div class="anime-card" id="card-103">
+                <div>
+                    <div class="anime-title">
+                        <span>Магическая битва</span>
+                        <button class="fav-btn" onclick="toggleFav('103')">🤍</button>
+                    </div>
+                    <div class="status-group">
+                        <div class="status-btn" onclick="setStatus('103', 'watching')">👀 Смотрю</div>
+                        <div class="status-btn" onclick="setStatus('103', 'completed')">✅ Просмотрено</div>
+                        <div class="status-btn" onclick="setStatus('103', 'planned')">📌 В планах</div>
+                        <div class="status-btn" onclick="setStatus('103', 'dropped')">❌ Брошено</div>
+                    </div>
+                </div>
+                <div class="rating-box">
+                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
+                    <select onchange="setRating('103', this.value)">
+                        <option value="0">Без оценки</option>
+                        <option value="10">⭐ 10/10</option>
+                        <option value="9">⭐ 9/10</option>
+                        <option value="8">⭐ 8/10</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Плитка 4 -->
+            <div class="anime-card" id="card-104">
+                <div>
+                    <div class="anime-title">
+                        <span>Клинок, рассекающий демонов</span>
+                        <button class="fav-btn" onclick="toggleFav('104')">🤍</button>
+                    </div>
+                    <div class="status-group">
+                        <div class="status-btn" onclick="setStatus('104', 'watching')">👀 Смотрю</div>
+                        <div class="status-btn" onclick="setStatus('104', 'completed')">✅ Просмотрено</div>
+                        <div class="status-btn" onclick="setStatus('104', 'planned')">📌 В планах</div>
+                        <div class="status-btn" onclick="setStatus('104', 'dropped')">❌ Брошено</div>
+                    </div>
+                </div>
+                <div class="rating-box">
+                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
+                    <select onchange="setRating('104', this.value)">
+                        <option value="0">Без оценки</option>
+                        <option value="10">⭐ 10/10</option>
+                        <option value="9">⭐ 9/10</option>
+                        <option value="8">⭐ 8/10</option>
+                    </select>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -76,107 +285,162 @@
             tg.expand();
         }
 
-        // Проверяем, открыто ли приложение ВНУТРИ Telegram
-        const isInsideTelegram = !!(tg?.initData && tg?.initDataUnsafe?.user?.id);
-        const realUser = tg?.initDataUnsafe?.user;
+        // УМНАЯ ПАМЯТЬ СЕССИИ (Для перехода между index.html и test.html без сбоев)
+        function getTelegramUser() {
+            if (tg?.initDataUnsafe?.user?.id) {
+                const u = tg.initDataUnsafe.user;
+                sessionStorage.setItem('tg_user_session', JSON.stringify(u));
+                return u;
+            }
+            const saved = sessionStorage.getItem('tg_user_session');
+            return saved ? JSON.parse(saved) : null;
+        }
+
+        const realUser = getTelegramUser();
         const tgUserId = realUser?.id ? realUser.id.toString() : null;
 
-        let userHistory = [];
+        // Названия аниме
+        const TITLES = {
+            '101': 'Атака Титанов',
+            '102': 'Наруто: Ураганные хроники',
+            '103': 'Магическая битва',
+            '104': 'Клинок, рассекающий демонов'
+        };
 
-        function checkEnvironment() {
-            // Если открыто в обычном браузере (Chrome / Safari / Yandex)
-            if (!isInsideTelegram) {
+        let userStore = { items: {} };
+
+        async function initApp() {
+            if (!tgUserId) {
                 document.getElementById('access-denied-block').style.display = 'flex';
                 document.getElementById('main-app-block').style.display = 'none';
-                return false;
+                return;
             }
 
-            // Если открыто внутри Telegram
             document.getElementById('access-denied-block').style.display = 'none';
             document.getElementById('main-app-block').style.display = 'block';
 
             document.getElementById('user-id').innerText = tgUserId;
             document.getElementById('user-name').innerText = realUser.first_name + (realUser.username ? ` (@${realUser.username})` : '');
-            
-            return true;
+
+            await loadLibrary();
         }
 
-        async function initApp() {
-            if (!checkEnvironment()) return;
-            await loadCloudData();
-        }
-
-        function loadCloudData() {
+        // Загрузка библиотеки из нативного облака Telegram (CloudStorage)
+        function loadLibrary() {
             return new Promise((resolve) => {
-                const cloudKey = `history_${tgUserId}`;
+                const cloudKey = `library_${tgUserId}`;
                 if (tg?.CloudStorage) {
-                    tg.CloudStorage.getItem(cloudKey, (err, value) => {
-                        if (!err && value) {
-                            try { userHistory = JSON.parse(value); } catch(e) { userHistory = []; }
-                        } else {
-                            userHistory = [];
+                    tg.CloudStorage.getItem(cloudKey, (err, val) => {
+                        if (!err && val) {
+                            try { userStore = JSON.parse(val); } catch(e) {}
                         }
-                        renderUI();
+                        renderCardsUI();
                         resolve();
                     });
                 } else {
-                    renderUI();
+                    const saved = localStorage.getItem(cloudKey);
+                    if (saved) { try { userStore = JSON.parse(saved); } catch(e){} }
+                    renderCardsUI();
                     resolve();
                 }
             });
         }
 
-        function renderUI() {
-            const list = document.getElementById('history-list');
-            if (userHistory.length === 0) {
-                list.innerHTML = '<li>Ваша история пуста</li>';
-                return;
-            }
-            list.innerHTML = userHistory.map(item => `
-                <li><b>${item.title}</b> <small style="color:#888;">(${item.time})</small></li>
-            `).join('');
+        // Мгновенная отрисовка Плиток и Статусов (0ms)
+        function renderCardsUI() {
+            userStore.items = userStore.items || {};
+
+            Object.keys(TITLES).forEach(animeId => {
+                const cardEl = document.getElementById(`card-${animeId}`);
+                if (!cardEl) return;
+
+                const itemData = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+                // Обновляем сердечко
+                const favBtn = cardEl.querySelector('.fav-btn');
+                favBtn.innerText = itemData.is_fav ? '❤️' : '🤍';
+
+                // Обновляем селект оценки
+                const selectEl = cardEl.querySelector('select');
+                selectEl.value = itemData.rating || 0;
+
+                // Обновляем кнопки статусов
+                const statusBtns = cardEl.querySelectorAll('.status-btn');
+                statusBtns.forEach(btn => {
+                    btn.className = 'status-btn'; // Сброс
+                    const text = btn.innerText;
+                    if (text.includes('Смотрю') && itemData.status === 'watching') btn.classList.add('active-watching');
+                    if (text.includes('Просмотрено') && itemData.status === 'completed') btn.classList.add('active-completed');
+                    if (text.includes('планах') && itemData.status === 'planned') btn.classList.add('active-planned');
+                    if (text.includes('Брошено') && itemData.status === 'dropped') btn.classList.add('active-dropped');
+                });
+            });
         }
 
-        async function addWatch(title) {
-            const newItem = { title: title, time: new Date().toLocaleTimeString('ru-RU') };
-            userHistory.unshift(newItem);
-            renderUI();
+        // Изменение статуса (Мгновенный отклик 0ms)
+        async function setStatus(animeId, statusName) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+            
+            // Если кликнули на активный статус — сбрасываем
+            current.status = (current.status === statusName) ? 'none' : statusName;
+            current.title = TITLES[animeId];
 
-            const cloudKey = `history_${tgUserId}`;
+            userStore.items[animeId] = current;
+            renderCardsUI();
+            await saveLibrary();
+        }
+
+        // Изменение оценки
+        async function setRating(animeId, ratingVal) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+            current.rating = parseInt(ratingVal) || 0;
+            current.title = TITLES[animeId];
+
+            userStore.items[animeId] = current;
+            renderCardsUI();
+            await saveLibrary();
+        }
+
+        // Переключение Избранного
+        async function toggleFav(animeId) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+            current.is_fav = !current.is_fav;
+            current.title = TITLES[animeId];
+
+            userStore.items[animeId] = current;
+            renderCardsUI();
+            await saveLibrary();
+        }
+
+        // Сохранение в CloudStorage + отправка в Канал -1003952561478
+        async function saveLibrary() {
+            document.getElementById('sync-status').innerText = '⚡ Сохранение...';
+
+            const cloudKey = `library_${tgUserId}`;
             if (tg?.CloudStorage) {
-                tg.CloudStorage.setItem(cloudKey, JSON.stringify(userHistory));
+                tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
+            } else {
+                localStorage.setItem(cloudKey, JSON.stringify(userStore));
             }
 
-            syncChannelBackground();
-        }
-
-        async function clearHistory() {
-            userHistory = [];
-            renderUI();
-            const cloudKey = `history_${tgUserId}`;
-            if (tg?.CloudStorage) {
-                tg.CloudStorage.setItem(cloudKey, JSON.stringify([]));
-            }
-            syncChannelBackground();
-        }
-
-        function syncChannelBackground() {
-            document.getElementById('sync-status').innerText = '⚡ Синхронизация...';
-
+            // Фоновая синхронизация с Яндекс Функцией для карточки в Канале
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'update_channel',
                     initData: tg?.initData || "",
-                    history: userHistory
+                    user_id: tgUserId,
+                    user_name: realUser.first_name + (realUser.username ? ` (@${realUser.username})` : ''),
+                    items: userStore.items
                 })
-            }).then(res => {
-                if (res.status === 403) {
-                    document.getElementById('sync-status').innerText = '⛔ Доступ запрещен';
-                } else {
-                    document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
-                }
+            }).then(() => {
+                document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
             }).catch(() => {
                 document.getElementById('sync-status').innerText = '⚡ Локально сохранено';
             });
