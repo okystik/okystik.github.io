@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Личный Профиль</title>
+    <title>Аниме Кинотеатр</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { background: #121212; color: #fff; font-family: sans-serif; padding: 16px; margin: 0; }
+        
+        /* Экран блокировки для сторонних браузеров */
+        .access-denied-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+            text-align: center;
+            padding: 24px;
+        }
+        .lock-icon { font-size: 64px; margin-bottom: 16px; }
+        .denied-title { font-size: 22px; font-weight: bold; color: #ff4d4d; margin-bottom: 12px; }
+        .denied-desc { font-size: 14px; color: #aaa; line-height: 1.6; max-width: 320px; }
+
+        /* Основное приложение Telegram */
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
         .badge { background: #2e7d32; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; float: right; }
-        .error-card { background: #3a1515; border: 1px solid #ff4d4d; color: #ff9999; padding: 20px; border-radius: 12px; text-align: center; font-size: 15px; line-height: 1.5; }
         button { width: 100%; padding: 14px; background: #f24b1f; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; font-size: 14px; }
         button:active { transform: scale(0.98); }
         button.secondary { background: #333; }
@@ -20,28 +35,32 @@
 </head>
 <body>
 
-    <!-- Предупреждение, если открыто НЕ в Telegram -->
-    <div id="not-telegram-block" class="error-card" style="display: none;">
-        ⚠️ СТРАНИЦА ОТКРЫТА ВНЕ TELEGRAM!<br><br>
-        Чтобы увидеть свой <b>настоящий Telegram ID</b> и пользоваться своим личным профилем, откройте эту страницу из чата с нашим Ботом в Telegram.
+    <!-- 1. ЭКРАН БЛОКИРОВКИ (Виден ТОЛЬКО в обычных браузерах) -->
+    <div id="access-denied-block" class="access-denied-screen" style="display: none;">
+        <div class="lock-icon">🔒</div>
+        <div class="denied-title">ДОСТУП ОГРАНИЧЕН</div>
+        <div class="denied-desc">
+            Настоящее приложение работает <b>исключительно во встроенном браузерe Telegram</b>.<br><br>
+            Пожалуйста, откройте чат с нашим Telegram-ботом и нажмите кнопку <b>«Отрыть Приложение»</b>.
+        </div>
     </div>
 
-    <!-- Основной интерфейс (Только для настоящих пользователей Telegram) -->
-    <div id="main-app" style="display: none;">
+    <!-- 2. ОСНОВНОЙ ИНТЕРФЕЙС (Виден ТОЛЬКО из Telegram) -->
+    <div id="main-app-block" style="display: none;">
         <div class="card">
-            <span id="sync-status" class="badge">⚡ Мгновенно</span>
-            <h3 style="margin-top: 0;">Ваш Настоящий Профиль</h3>
-            <p><strong>Ваш Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold; font-size: 16px;">Определение...</span></p>
-            <p><strong>Пользователь:</strong> <span id="user-name">...</span></p>
+            <span id="sync-status" class="badge">🔒 Telegram Вход</span>
+            <h3 style="margin-top: 0;">Ваш Профиль</h3>
+            <p><strong>Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold; font-size: 16px;">...</span></p>
+            <p><strong>Имя:</strong> <span id="user-name">...</span></p>
         </div>
 
         <div class="card">
-            <h3>Ваша личная история</h3>
+            <h3>Просмотр контента</h3>
             <button onclick="addWatch('Посмотрел «Атака Титанов»')">+ «Атака Титанов»</button>
             <button onclick="addWatch('Посмотрел «Наруто»')">+ «Наруто»</button>
             <button onclick="addWatch('Посмотрел «Магическая битва»')">+ «Магическая битва»</button>
             
-            <h4>Ваши просмотры:</h4>
+            <h4>Ваша история:</h4>
             <ul id="history-list"><li>Загрузка...</li></ul>
 
             <button class="secondary" onclick="clearHistory()">Очистить историю</button>
@@ -57,36 +76,39 @@
             tg.expand();
         }
 
-        // Настоящие данные ТОЛЬКО из Telegram
+        // Проверяем, открыто ли приложение ВНУТРИ Telegram
+        const isInsideTelegram = !!(tg?.initData && tg?.initDataUnsafe?.user?.id);
         const realUser = tg?.initDataUnsafe?.user;
         const tgUserId = realUser?.id ? realUser.id.toString() : null;
 
         let userHistory = [];
 
-        async function initApp() {
-            // Если откроют в обычном браузере — показываем красную плашку и не пускаем дальше
-            if (!tgUserId) {
-                document.getElementById('not-telegram-block').style.display = 'block';
-                document.getElementById('main-app').style.display = 'none';
-                return;
+        function checkEnvironment() {
+            // Если открыто в обычном браузере (Chrome / Safari / Yandex)
+            if (!isInsideTelegram) {
+                document.getElementById('access-denied-block').style.display = 'flex';
+                document.getElementById('main-app-block').style.display = 'none';
+                return false;
             }
 
-            // Настоящий вход из Telegram
-            document.getElementById('not-telegram-block').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
+            // Если открыто внутри Telegram
+            document.getElementById('access-denied-block').style.display = 'none';
+            document.getElementById('main-app-block').style.display = 'block';
 
             document.getElementById('user-id').innerText = tgUserId;
             document.getElementById('user-name').innerText = realUser.first_name + (realUser.username ? ` (@${realUser.username})` : '');
+            
+            return true;
+        }
 
-            // Загружаем личное облако пользователя в Telegram
+        async function initApp() {
+            if (!checkEnvironment()) return;
             await loadCloudData();
         }
 
-        // Чтение из персонального облака Telegram
         function loadCloudData() {
             return new Promise((resolve) => {
                 const cloudKey = `history_${tgUserId}`;
-                
                 if (tg?.CloudStorage) {
                     tg.CloudStorage.getItem(cloudKey, (err, value) => {
                         if (!err && value) {
@@ -98,15 +120,12 @@
                         resolve();
                     });
                 } else {
-                    const saved = localStorage.getItem(cloudKey);
-                    userHistory = saved ? JSON.parse(saved) : [];
                     renderUI();
                     resolve();
                 }
             });
         }
 
-        // Отрисовка UI без задержек (0 миллисекунд)
         function renderUI() {
             const list = document.getElementById('history-list');
             if (userHistory.length === 0) {
@@ -118,26 +137,16 @@
             `).join('');
         }
 
-        // Мгновенный отклик при клике
         async function addWatch(title) {
-            const newItem = {
-                title: title,
-                time: new Date().toLocaleTimeString('ru-RU')
-            };
-
-            // 1. Экран обновляется МОМЕНТАЛЬНО (0ms)
+            const newItem = { title: title, time: new Date().toLocaleTimeString('ru-RU') };
             userHistory.unshift(newItem);
             renderUI();
 
-            // 2. Сохраняем в облако Telegram ДЛЯ ЭТОГО ПОЛЬЗОВАТЕЛЯ
             const cloudKey = `history_${tgUserId}`;
             if (tg?.CloudStorage) {
                 tg.CloudStorage.setItem(cloudKey, JSON.stringify(userHistory));
-            } else {
-                localStorage.setItem(cloudKey, JSON.stringify(userHistory));
             }
 
-            // 3. Отправляем карточку в закрытый канал -1003952561478
             syncChannelBackground();
         }
 
@@ -147,13 +156,10 @@
             const cloudKey = `history_${tgUserId}`;
             if (tg?.CloudStorage) {
                 tg.CloudStorage.setItem(cloudKey, JSON.stringify([]));
-            } else {
-                localStorage.setItem(cloudKey, JSON.stringify([]));
             }
             syncChannelBackground();
         }
 
-        // Фоновая отправка карточки в канал
         function syncChannelBackground() {
             document.getElementById('sync-status').innerText = '⚡ Синхронизация...';
 
@@ -163,12 +169,14 @@
                 body: JSON.stringify({
                     action: 'update_channel',
                     initData: tg?.initData || "",
-                    user_id: tgUserId,
-                    user_name: realUser.first_name + (realUser.username ? ` (@${realUser.username})` : ''),
                     history: userHistory
                 })
-            }).then(() => {
-                document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
+            }).then(res => {
+                if (res.status === 403) {
+                    document.getElementById('sync-status').innerText = '⛔ Доступ запрещен';
+                } else {
+                    document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
+                }
             }).catch(() => {
                 document.getElementById('sync-status').innerText = '⚡ Локально сохранено';
             });
