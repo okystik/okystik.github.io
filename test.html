@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Настоящий Аккаунт - Telegram Cloud</title>
+    <title>Личный Профиль</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { background: #121212; color: #fff; font-family: sans-serif; padding: 16px; margin: 0; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
         .badge { background: #2e7d32; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; float: right; }
-        .banner { background: #ff9800; color: #000; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 16px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 6px 0 10px; border-radius: 6px; border: 1px solid #444; background: #111; color: #fff; }
-        button { width: 100%; padding: 12px; background: #f24b1f; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+        .error-card { background: #3a1515; border: 1px solid #ff4d4d; color: #ff9999; padding: 20px; border-radius: 12px; text-align: center; font-size: 15px; line-height: 1.5; }
+        button { width: 100%; padding: 14px; background: #f24b1f; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; font-size: 14px; }
+        button:active { transform: scale(0.98); }
         button.secondary { background: #333; }
         ul { padding-left: 20px; color: #ccc; }
         li { margin-bottom: 6px; }
@@ -20,34 +20,32 @@
 </head>
 <body>
 
-    <div id="impersonate-banner" class="banner" style="display: none;">
-        👀 Режим просмотра чужого профиля
+    <!-- Предупреждение, если открыто НЕ в Telegram -->
+    <div id="not-telegram-block" class="error-card" style="display: none;">
+        ⚠️ СТРАНИЦА ОТКРЫТА ВНЕ TELEGRAM!<br><br>
+        Чтобы увидеть свой <b>настоящий Telegram ID</b> и пользоваться своим личным профилем, откройте эту страницу из чата с нашим Ботом в Telegram.
     </div>
 
-    <div class="card">
-        <span id="sync-status" class="badge">☁️ Telegram Cloud</span>
-        <h3>Ваш Настоящий Профиль</h3>
-        <p><strong>Ваш Telegram ID:</strong> <span id="real-id" style="color: #4caf50;">Загрузка...</span></p>
-        <p><strong>Активный ID:</strong> <span id="active-id">...</span></p>
-        <p><strong>Хранилище:</strong> Нативное облако Telegram</p>
-    </div>
+    <!-- Основной интерфейс (Только для настоящих пользователей Telegram) -->
+    <div id="main-app" style="display: none;">
+        <div class="card">
+            <span id="sync-status" class="badge">⚡ Мгновенно</span>
+            <h3 style="margin-top: 0;">Ваш Настоящий Профиль</h3>
+            <p><strong>Ваш Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold; font-size: 16px;">Определение...</span></p>
+            <p><strong>Пользователь:</strong> <span id="user-name">...</span></p>
+        </div>
 
-    <div class="card">
-        <h3>Добавить просмотр</h3>
-        <button onclick="addWatch('Атака Титанов', '101', 'watching', 10)">+ «Атака Титанов» (⭐10)</button>
-        <button onclick="addWatch('Наруто', '102', 'completed', 9)">+ «Наруто» (⭐9)</button>
-        <button onclick="addWatch('Блич', '103', 'planned', 0)">+ «Блич» (В планах)</button>
-        
-        <h4>Сохранённая история:</h4>
-        <ul id="history-list"><li>Загрузка из облака Telegram...</li></ul>
-        <button class="secondary" onclick="clearHistory()">Очистить историю</button>
-    </div>
+        <div class="card">
+            <h3>Ваша личная история</h3>
+            <button onclick="addWatch('Посмотрел «Атака Титанов»')">+ «Атака Титанов»</button>
+            <button onclick="addWatch('Посмотрел «Наруто»')">+ «Наруто»</button>
+            <button onclick="addWatch('Посмотрел «Магическая битва»')">+ «Магическая битва»</button>
+            
+            <h4>Ваши просмотры:</h4>
+            <ul id="history-list"><li>Загрузка...</li></ul>
 
-    <div class="card">
-        <h3>Просмотр чужого профиля (Impersonation)</h3>
-        <input type="text" id="target-id-input" placeholder="Введите чужой Telegram ID">
-        <button onclick="switchUser()">Переключить профиль</button>
-        <button class="secondary" onclick="resetUser()">Вернуться в свой аккаунт</button>
+            <button class="secondary" onclick="clearHistory()">Очистить историю</button>
+        </div>
     </div>
 
     <script>
@@ -59,153 +57,124 @@
             tg.expand();
         }
 
-        let userData = { history: [], items: {}, message_id: null };
+        // Настоящие данные ТОЛЬКО из Telegram
+        const realUser = tg?.initDataUnsafe?.user;
+        const tgUserId = realUser?.id ? realUser.id.toString() : null;
 
-        function getRealTgId() {
-            return tg?.initDataUnsafe?.user?.id?.toString() || '100001';
-        }
+        let userHistory = [];
 
-        function getActiveTgId() {
-            return localStorage.getItem('view_as_id') || getRealTgId();
-        }
-
-        // Чтение из нативного облака Telegram (CloudStorage)
-        function loadFromTelegramCloud(key) {
-            return new Promise((resolve) => {
-                if (tg?.CloudStorage) {
-                    tg.CloudStorage.getItem(key, (err, value) => {
-                        if (!err && value) {
-                            try { resolve(JSON.parse(value)); } catch (e) { resolve(null); }
-                        } else {
-                            resolve(null);
-                        }
-                    });
-                } else {
-                    // Фолбэк на localStorage для обычных ПК браузеров
-                    const local = localStorage.getItem(key);
-                    resolve(local ? JSON.parse(local) : null);
-                }
-            });
-        }
-
-        // Запись в нативное облако Telegram (CloudStorage)
-        function saveToTelegramCloud(key, value) {
-            return new Promise((resolve) => {
-                const stringVal = JSON.stringify(value);
-                if (tg?.CloudStorage) {
-                    tg.CloudStorage.setItem(key, stringVal, () => resolve(true));
-                } else {
-                    localStorage.setItem(key, stringVal);
-                    resolve(true);
-                }
-            });
-        }
-
-        // Загрузка страницы
-        async function loadData() {
-            document.getElementById('sync-status').innerText = '🔄 Загрузка из Telegram...';
-
-            const realId = getRealTgId();
-            const activeId = getActiveTgId();
-
-            document.getElementById('real-id').innerText = realId;
-            document.getElementById('active-id').innerText = activeId;
-            document.getElementById('impersonate-banner').style.display = (realId !== activeId) ? 'block' : 'none';
-
-            // Загружаем данные по activeId прямо из Telegram Cloud
-            const cloudKey = `user_data_${activeId}`;
-            const savedData = await loadFromTelegramCloud(cloudKey);
-
-            if (savedData) {
-                userData = savedData;
-            } else {
-                userData = { history: [], items: {}, message_id: null };
-            }
-
-            renderHistory();
-            document.getElementById('sync-status').innerText = '☁️ В облаке Telegram';
-        }
-
-        // Сохранение и синхронизация с каналом -1003952561478
-        async function saveData() {
-            document.getElementById('sync-status').innerText = '⏳ Сохранение...';
-
-            const activeId = getActiveTgId();
-            const cloudKey = `user_data_${activeId}`;
-
-            // 1. Сохраняем ВЕЧНО в облако Telegram
-            await saveToTelegramCloud(cloudKey, userData);
-
-            // 2. Отправляем карточку в закрытый канал -1003952561478
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'update_channel',
-                        initData: tg?.initData || "",
-                        view_as_id: localStorage.getItem('view_as_id') || "",
-                        history: userData.history,
-                        items: userData.items,
-                        message_id: userData.message_id
-                    })
-                });
-
-                const res = await response.json();
-                if (res.success && res.message_id) {
-                    userData.message_id = res.message_id;
-                    await saveToTelegramCloud(cloudKey, userData);
-                }
-                document.getElementById('sync-status').innerText = '☁️ Сохранено в ТГ и Канал';
-            } catch (e) {
-                console.error("Ошибка обновления канала:", e);
-                document.getElementById('sync-status').innerText = '☁️ Сохранено в ТГ';
-            }
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('history-list');
-            const history = userData.history || [];
-            if (history.length === 0) {
-                container.innerHTML = '<li>История пуста</li>';
+        async function initApp() {
+            // Если откроют в обычном браузере — показываем красную плашку и не пускаем дальше
+            if (!tgUserId) {
+                document.getElementById('not-telegram-block').style.display = 'block';
+                document.getElementById('main-app').style.display = 'none';
                 return;
             }
 
-            container.innerHTML = history.map(i => `<li><b>${i.title}</b> <small>(${i.time})</small></li>`).join('');
+            // Настоящий вход из Telegram
+            document.getElementById('not-telegram-block').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+
+            document.getElementById('user-id').innerText = tgUserId;
+            document.getElementById('user-name').innerText = realUser.first_name + (realUser.username ? ` (@${realUser.username})` : '');
+
+            // Загружаем личное облако пользователя в Telegram
+            await loadCloudData();
         }
 
-        async function addWatch(title, animeId, status, rating) {
-            if (!userData.history) userData.history = [];
-            if (!userData.items) userData.items = {};
+        // Чтение из персонального облака Telegram
+        function loadCloudData() {
+            return new Promise((resolve) => {
+                const cloudKey = `history_${tgUserId}`;
+                
+                if (tg?.CloudStorage) {
+                    tg.CloudStorage.getItem(cloudKey, (err, value) => {
+                        if (!err && value) {
+                            try { userHistory = JSON.parse(value); } catch(e) { userHistory = []; }
+                        } else {
+                            userHistory = [];
+                        }
+                        renderUI();
+                        resolve();
+                    });
+                } else {
+                    const saved = localStorage.getItem(cloudKey);
+                    userHistory = saved ? JSON.parse(saved) : [];
+                    renderUI();
+                    resolve();
+                }
+            });
+        }
 
-            userData.history.unshift({ title: title, time: new Date().toLocaleTimeString('ru-RU') });
-            userData.items[animeId] = { title: title, status: status, rating: rating };
+        // Отрисовка UI без задержек (0 миллисекунд)
+        function renderUI() {
+            const list = document.getElementById('history-list');
+            if (userHistory.length === 0) {
+                list.innerHTML = '<li>Ваша история пуста</li>';
+                return;
+            }
+            list.innerHTML = userHistory.map(item => `
+                <li><b>${item.title}</b> <small style="color:#888;">(${item.time})</small></li>
+            `).join('');
+        }
 
-            renderHistory();
-            await saveData();
+        // Мгновенный отклик при клике
+        async function addWatch(title) {
+            const newItem = {
+                title: title,
+                time: new Date().toLocaleTimeString('ru-RU')
+            };
+
+            // 1. Экран обновляется МОМЕНТАЛЬНО (0ms)
+            userHistory.unshift(newItem);
+            renderUI();
+
+            // 2. Сохраняем в облако Telegram ДЛЯ ЭТОГО ПОЛЬЗОВАТЕЛЯ
+            const cloudKey = `history_${tgUserId}`;
+            if (tg?.CloudStorage) {
+                tg.CloudStorage.setItem(cloudKey, JSON.stringify(userHistory));
+            } else {
+                localStorage.setItem(cloudKey, JSON.stringify(userHistory));
+            }
+
+            // 3. Отправляем карточку в закрытый канал -1003952561478
+            syncChannelBackground();
         }
 
         async function clearHistory() {
-            userData.history = [];
-            userData.items = {};
-            renderHistory();
-            await saveData();
+            userHistory = [];
+            renderUI();
+            const cloudKey = `history_${tgUserId}`;
+            if (tg?.CloudStorage) {
+                tg.CloudStorage.setItem(cloudKey, JSON.stringify([]));
+            } else {
+                localStorage.setItem(cloudKey, JSON.stringify([]));
+            }
+            syncChannelBackground();
         }
 
-        async function switchUser() {
-            const inputVal = document.getElementById('target-id-input').value.trim();
-            if (!inputVal) return alert("Введите ID!");
-            localStorage.setItem('view_as_id', inputVal);
-            document.getElementById('target-id-input').value = '';
-            await loadData();
+        // Фоновая отправка карточки в канал
+        function syncChannelBackground() {
+            document.getElementById('sync-status').innerText = '⚡ Синхронизация...';
+
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_channel',
+                    initData: tg?.initData || "",
+                    user_id: tgUserId,
+                    user_name: realUser.first_name + (realUser.username ? ` (@${realUser.username})` : ''),
+                    history: userHistory
+                })
+            }).then(() => {
+                document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
+            }).catch(() => {
+                document.getElementById('sync-status').innerText = '⚡ Локально сохранено';
+            });
         }
 
-        async function resetUser() {
-            localStorage.removeItem('view_as_id');
-            await loadData();
-        }
-
-        document.addEventListener('DOMContentLoaded', loadData);
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
