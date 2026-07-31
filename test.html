@@ -3,50 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - Настоящая авторизация Telegram</title>
+    <title>Аниме Профиль - Облачная синхронизация</title>
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <style>
-        body { background-color: #121212; color: #fff; font-family: sans-serif; padding: 16px; margin: 0; }
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-        .badge { background: #2e7d32; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
-        .badge-admin { background: #d32f2f; }
-        .banner { background: #ff9800; color: #000; padding: 8px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; text-align: center; }
-        input { width: calc(100% - 22px); padding: 10px; margin: 6px 0 10px; border-radius: 6px; border: 1px solid #444; background: #111; color: #fff; }
-        button { width: 100%; padding: 10px; background: #f24b1f; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
-        button.secondary { background: #444; }
+        * { box-sizing: border-box; }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #2e7d32;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            float: right;
+        }
+
+        .banner {
+            background: #ff9800;
+            color: #000;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 10px 0;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background: #111;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #f24b1f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        button.secondary { background: #333; }
+        ul { padding-left: 20px; color: #ccc; }
+        li { margin-bottom: 6px; }
     </style>
 </head>
 <body>
 
-    <div id="view-banner" class="banner" style="display: none;">
-        👀 Просмотр за другого пользователя
+    <div id="impersonate-banner" class="banner" style="display: none;">
+        👀 Режим просмотра чужого профиля
     </div>
 
     <div class="card">
-        <span id="auth-badge" class="badge">🔒 Настоящий аккаунт</span>
-        <h3>Ваш профиль</h3>
-        <p><strong>Подлинный Telegram ID:</strong> <span id="real-tg-id">Загрузка...</span></p>
-        <p><strong>Просматриваемый ID:</strong> <span id="target-tg-id">Загрузка...</span></p>
-        <p><strong>Права Администратора:</strong> <span id="admin-status">...</span></p>
+        <span id="sync-status" class="badge">☁️ Связь...</span>
+        <h3>Ваш Профиль</h3>
+        <p><strong>Ваш TG ID:</strong> <span id="real-id" style="color: #4caf50;">...</span></p>
+        <p><strong>Текущий активный ID:</strong> <span id="active-id">...</span></p>
     </div>
 
     <div class="card">
-        <h3>Действия и Синхронизация</h3>
-        <button onclick="addWatchHistory('Посмотрел аниме «Блич»', '103')">+ «Блич»</button>
-        <h4>История:</h4>
-        <ul id="history-list"><li>Загрузка с сервера...</li></ul>
+        <h3>Добавить просмотр и статус</h3>
+        <button onclick="addWatch('Атака Титанов', '101', 'watching', 9)">+ «Атака Титанов» (Смотрит ⭐9)</button>
+        <button onclick="addWatch('Наруто', '102', 'completed', 10)">+ «Наруто» (Просмотрено ⭐10)</button>
+        <button onclick="addWatch('Магическая битва', '103', 'planned', 0)">+ «Магическая битва» (В планах)</button>
+        
+        <h4>Синхронизированная история:</h4>
+        <ul id="history-list">
+            <li>Загрузка...</li>
+        </ul>
+
         <button class="secondary" onclick="clearHistory()">Очистить историю</button>
     </div>
 
-    <div id="admin-panel" class="card" style="display: none;">
-        <h3>Режим Админа: Посмотреть чужой профиль</h3>
-        <input type="text" id="target-id" placeholder="Введи чужой TG ID">
-        <button onclick="switchUser()">Загрузить профиль юзера</button>
-        <button class="secondary" onclick="resetUser()">Сбросить на свой ID</button>
+    <div class="card">
+        <h3>Посмотреть за другого юзера</h3>
+        <input type="text" id="target-id-input" placeholder="Введи Telegram ID">
+        <button onclick="switchUser()">Смотреть профиль</button>
+        <button class="secondary" onclick="resetUser()">Вернуться в свой аккаунт</button>
     </div>
 
     <script>
-        const API_URL = 'YOUR_YANDEX_CLOUD_FUNCTION_URL'; // Вставьте ссылку на функцию
+        // Вшитая ссылка на вашу Яндекс Функция
+        const API_URL = 'https://functions.yandexcloud.net/d4evib2sgptv8r0rvtht';
 
         const tg = window.Telegram?.WebApp;
         if (tg) {
@@ -54,16 +118,14 @@
             tg.expand();
         }
 
-        let currentUserState = { items: {}, history: [], anime_titles: {}, message_id: null };
-        let isUserAdmin = false;
+        let userState = { history: [], items: {}, anime_titles: {}, message_id: null };
 
-        // Получаем сырой зашифрованный подлинный initData от Telegram
-        function getInitData() {
-            return tg?.initData || "";
+        function getImpersonateId() {
+            return localStorage.getItem('view_as_id') || '';
         }
 
-        async function syncLoad() {
-            const viewAsId = localStorage.getItem('view_as_id');
+        async function loadData() {
+            document.getElementById('sync-status').innerText = '🔄 Загрузка...';
 
             try {
                 const response = await fetch(API_URL, {
@@ -71,37 +133,31 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'load',
-                        initData: getInitData(),
-                        view_as_id: viewAsId
+                        initData: tg?.initData || "",
+                        view_as_id: getImpersonateId()
                     })
                 });
 
                 const res = await response.json();
+                if (res.success) {
+                    document.getElementById('real-id').innerText = res.real_user_id;
+                    document.getElementById('active-id').innerText = res.active_user_id;
+                    
+                    const isOther = res.real_user_id !== res.active_user_id;
+                    document.getElementById('impersonate-banner').style.display = isOther ? 'block' : 'none';
 
-                if (!res.success) {
-                    alert("Ошибка авторизации: " + res.error);
-                    return;
+                    userState = res.data || { history: [], items: {}, titles: {}, message_id: null };
+                    renderHistory();
+                    document.getElementById('sync-status').innerText = '☁️ Облако активен';
                 }
-
-                // Отображаем настоящие проверенные данные
-                document.getElementById('real-tg-id').innerText = res.real_user_id;
-                document.getElementById('target-tg-id').innerText = res.target_user_id;
-                document.getElementById('admin-status').innerText = res.is_admin ? "ДА (Доступен режим просмотра)" : "НЕТ";
-                
-                isUserAdmin = res.is_admin;
-                document.getElementById('admin-panel').style.display = isUserAdmin ? 'block' : 'none';
-                document.getElementById('view-banner').style.display = (res.real_user_id !== res.target_user_id) ? 'block' : 'none';
-
-                currentUserState = res.data;
-                renderUI();
-
-            } catch (e) {
-                console.error("Ошибка загрузки:", e);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('sync-status').innerText = '❌ Ошибка сети';
             }
         }
 
-        async function syncSave() {
-            const viewAsId = localStorage.getItem('view_as_id');
+        async function saveData() {
+            document.getElementById('sync-status').innerText = '⏳ Сохранение...';
 
             try {
                 const response = await fetch(API_URL, {
@@ -109,62 +165,81 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'save',
-                        initData: getInitData(),
-                        view_as_id: viewAsId,
-                        items: currentUserState.items,
-                        history: currentUserState.history,
-                        anime_titles: currentUserState.anime_titles,
-                        message_id: currentUserState.message_id
+                        initData: tg?.initData || "",
+                        view_as_id: getImpersonateId(),
+                        history: userState.history,
+                        items: userState.items,
+                        anime_titles: userState.titles,
+                        message_id: userState.message_id
                     })
                 });
 
                 const res = await response.json();
                 if (res.success && res.message_id) {
-                    currentUserState.message_id = res.message_id;
+                    userState.message_id = res.message_id;
                 }
-            } catch (e) {
-                console.error("Ошибка сохранения:", e);
+                document.getElementById('sync-status').innerText = '☁️ Сохранено';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('sync-status').innerText = '❌ Ошибка сохранения';
             }
         }
 
-        function renderUI() {
-            const list = document.getElementById('history-list');
-            const history = currentUserState.history || [];
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            const history = userState.history || [];
             if (history.length === 0) {
-                list.innerHTML = '<li>История пуста</li>';
+                container.innerHTML = '<li>История пуста</li>';
                 return;
             }
-            list.innerHTML = history.map(i => `<li>${i.title} <small>(${i.time})</small></li>`).join('');
+
+            container.innerHTML = history.map(item => `
+                <li><b>${item.title}</b> <small style="color:#777;">(${item.time})</small></li>
+            `).join('');
         }
 
-        async function addWatchHistory(title, id) {
-            currentUserState.history.unshift({ title, time: new Date().toLocaleTimeString('ru-RU') });
-            currentUserState.items[id] = { is_fav: true, status: 'watching', rating: 10 };
-            currentUserState.anime_titles[id] = title;
-            renderUI();
-            await syncSave();
+        async function addWatch(title, animeId, status, rating) {
+            if (!userState.history) userState.history = [];
+            if (!userState.items) userState.items = {};
+            if (!userState.titles) userState.titles = {};
+
+            userState.history.unshift({
+                title: title,
+                time: new Date().toLocaleTimeString('ru-RU')
+            });
+
+            userState.items[animeId] = {
+                is_fav: true,
+                status: status,
+                rating: rating
+            };
+            userState.titles[animeId] = title;
+
+            renderHistory();
+            await saveData();
         }
 
         async function clearHistory() {
-            currentUserState.history = [];
-            currentUserState.items = {};
-            renderUI();
-            await syncSave();
+            userState.history = [];
+            userState.items = {};
+            renderHistory();
+            await saveData();
         }
 
         async function switchUser() {
-            const id = document.getElementById('target-id').value.trim();
-            if (!id) return;
-            localStorage.setItem('view_as_id', id);
-            await syncLoad();
+            const inputVal = document.getElementById('target-id-input').value.trim();
+            if (!inputVal) return alert("Введите Telegram ID!");
+            localStorage.setItem('view_as_id', inputVal);
+            document.getElementById('target-id-input').value = '';
+            await loadData();
         }
 
         async function resetUser() {
             localStorage.removeItem('view_as_id');
-            await syncLoad();
+            await loadData();
         }
 
-        document.addEventListener('DOMContentLoaded', syncLoad);
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
