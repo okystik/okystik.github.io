@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кинотеатр</title>
+    <title>Кинотеатр - Тестовый Профиль</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -16,6 +16,7 @@
             min-height: 100vh;
         }
 
+        /* 1. Центрированный экран входа */
         .centered-container {
             display: flex;
             align-items: center;
@@ -33,6 +34,12 @@
             max-width: 380px;
             text-align: center;
             box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+        }
+
+        .greeting-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 0 0 6px 0;
         }
 
         .nickname-box {
@@ -53,7 +60,10 @@
             font-size: 16px;
             cursor: pointer;
             margin-bottom: 14px;
+            transition: transform 0.1s, background 0.2s;
         }
+
+        button.primary-btn:active { transform: scale(0.98); }
 
         .alt-link {
             background: none;
@@ -62,6 +72,7 @@
             font-size: 13px;
             cursor: pointer;
             text-decoration: underline;
+            padding: 4px;
         }
 
         .back-btn {
@@ -73,6 +84,7 @@
             border-radius: 8px;
             margin-top: 12px;
             cursor: pointer;
+            font-size: 13px;
         }
 
         input {
@@ -83,12 +95,14 @@
             border: 1px solid #444;
             background: #111;
             color: #fff;
+            font-size: 14px;
             text-align: center;
         }
 
+        /* 2. Основной интерфейс */
         .app-container {
             padding: 16px;
-            max-width: 800px;
+            max-width: 840px;
             margin: 0 auto;
         }
 
@@ -121,13 +135,11 @@
             .anime-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        /* Карточка с Постером */
         .anime-card {
             background: #1e1e1e;
             border: 1px solid #333;
             border-radius: 14px;
-            padding: 14px;
-            overflow: hidden;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -151,6 +163,16 @@
             align-items: center;
         }
 
+        .fav-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+        }
+
+        /* Статусы просмотра */
         .status-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -170,28 +192,75 @@
             text-align: center;
         }
 
-        .status-btn.active-watching { background: #1976d2; color: #fff; }
-        .status-btn.active-completed { background: #2e7d32; color: #fff; }
-        .status-btn.active-planned { background: #ed6c02; color: #fff; }
-        .status-btn.active-dropped { background: #d32f2f; color: #fff; }
+        .status-btn.active-watching { background: #1976d2; color: #fff; border-color: #2196f3; }
+        .status-btn.active-completed { background: #2e7d32; color: #fff; border-color: #4caf50; }
+        .status-btn.active-planned { background: #ed6c02; color: #fff; border-color: #ff9800; }
+        .status-btn.active-dropped { background: #d32f2f; color: #fff; border-color: #f44336; }
 
+        /* 3. Интерактивный неоновый рейтинг ⭐ 10/10 */
+        .star-rating-container {
+            background: #141414;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            margin-top: 10px;
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .star-bar {
+            display: flex;
+            gap: 2px;
+            justify-content: space-between;
+        }
+
+        .star-bar .star {
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.15s ease, transform 0.15s ease;
+            user-select: none;
+        }
+
+        .star-bar .star:hover,
+        .star-bar .star.hovered {
+            color: #ffb703;
+            transform: scale(1.2);
+        }
+
+        .star-bar .star.active {
+            color: #f24b1f;
+            text-shadow: 0 0 8px rgba(242, 75, 31, 0.7);
+        }
+
+        /* Серии */
         .episodes-box {
             background: #141414;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 12px;
             font-size: 12px;
         }
 
         .ep-btn {
             display: inline-block;
-            background: #333;
+            background: #2a2a2a;
             color: #fff;
-            padding: 4px 8px;
-            margin: 2px;
-            border-radius: 4px;
+            padding: 6px 10px;
+            margin: 3px;
+            border-radius: 6px;
             font-size: 11px;
+            text-decoration: none;
+            border: 1px solid #333;
+            cursor: pointer;
         }
+        .ep-btn:hover { background: #f24b1f; }
     </style>
 </head>
 <body>
@@ -199,7 +268,7 @@
     <!-- 1. ЦЕНТРИРОВАННЫЙ ЭКРАН ВХОДА -->
     <div id="screen-prompt" class="centered-container" style="display: none;">
         <div class="auth-card">
-            <div style="font-size: 24px; font-weight: bold; margin-bottom: 6px;">Привет! 👋</div>
+            <div class="greeting-title">Привет! 👋</div>
             <div id="prompt-nickname" class="nickname-box">Загрузка...</div>
 
             <button class="primary-btn" onclick="confirmLogin()">Войти</button>
@@ -210,7 +279,7 @@
         </div>
     </div>
 
-    <!-- 2. ЭКРАН РУЧНОГО ВВОДА ID -->
+    <!-- 2. ЭКРАН РУЧНОГО ВВОДА ДРУГОГО ID -->
     <div id="screen-manual" class="centered-container" style="display: none;">
         <div class="auth-card">
             <h3 style="margin: 0 0 8px 0;">Вход по другому ID</h3>
@@ -226,7 +295,7 @@
         </div>
     </div>
 
-    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС КАТАЛОГА -->
+    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС И КАТАЛОГ -->
     <div id="screen-app" class="app-container" style="display: none;">
         <div class="header-card">
             <span id="sync-status" class="badge">⚡ Вход выполнен</span>
@@ -236,10 +305,10 @@
             <p style="margin: 4px 0;"><strong>Никнейм:</strong> <span id="app-user-name">...</span></p>
         </div>
 
-        <h3 style="margin-bottom: 16px;">📚 Авто-Каталог из Канала (-1003952561478):</h3>
+        <h3 style="margin-bottom: 16px;">📚 Каталог Аниме:</h3>
 
         <div id="anime-grid-container" class="anime-grid">
-            <!-- Плитки с постерами загружаются динамически -->
+            <!-- Сюда вставляются карточки из JSON / Облака -->
         </div>
     </div>
 
@@ -255,9 +324,31 @@
         let detectedUser = null;
         let activeUser = null;
 
-        let catalogData = {};
+        // Встроенный каталог по умолчанию (если anime_data.json еще не загрузился)
+        let catalogData = {
+            '001': {
+                id: '001',
+                title: 'Атака Титанов',
+                poster_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500',
+                seasons: { '01': { '01': 'https://t.me/c/1570317776/4030', '02': 'https://t.me/c/1570317776/4031' } }
+            },
+            '002': {
+                id: '002',
+                title: 'Наруто: Ураганные хроники',
+                poster_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500',
+                seasons: { '01': { '01': 'https://t.me/c/1570317776/3996' } }
+            },
+            '003': {
+                id: '003',
+                title: 'Магическая битва',
+                poster_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500',
+                seasons: { '01': { '01': 'https://t.me/c/1570317776/3310' } }
+            }
+        };
+
         let userStore = { items: {} };
 
+        // Инициализация выявления ID
         function findUser() {
             if (tg?.initDataUnsafe?.user?.id) {
                 const u = tg.initDataUnsafe.user;
@@ -341,28 +432,37 @@
             location.reload();
         }
 
-        // Загрузка каталога с Постерами из Яндекс Облака
+        // Попытка получить свежий catalog из JSON / Яндекс Облака
         async function fetchCatalog() {
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'get_catalog' })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    catalogData = data.catalog || {};
-                    renderCatalogUI();
+                // Загружаем из anime_data.json если есть
+                const jsonRes = await fetch('anime_data.json');
+                if (jsonRes.ok) {
+                    const jsonCatalog = await jsonRes.json();
+                    if (Array.isArray(jsonCatalog)) {
+                        catalogData = {};
+                        jsonCatalog.forEach(item => {
+                            catalogData[item.id || item.name] = {
+                                id: item.id || item.name,
+                                title: item.name,
+                                poster_url: item.image,
+                                seasons: item.seasons || {}
+                            };
+                        });
+                    }
                 }
-            } catch(e) { console.error("Ошибка загрузки каталога:", e); }
+            } catch(e) { console.log("Используется встроенный каталог"); }
+
+            renderCatalogUI();
         }
 
+        // 🎨 РЕНДЕР КАТАЛОГА С ИНТЕРАКТИВНЫМ РЕЙТИНГОМ
         function renderCatalogUI() {
             const container = document.getElementById('anime-grid-container');
             const keys = Object.keys(catalogData);
 
             if (keys.length === 0) {
-                container.innerHTML = '<p style="color:#aaa;">Каталог пуст. Опубликуйте пост с картинкой и тегом #001 в канал -1003952561478</p>';
+                container.innerHTML = '<p style="color:#aaa;">Каталог пуст</p>';
                 return;
             }
 
@@ -373,30 +473,53 @@
                     : `<div class="poster-img" style="display:flex;align-items:center;justify-content:center;color:#555;">Нет Постера</div>`;
 
                 const seasonsHtml = Object.keys(item.seasons || {}).map(sNum => {
-                    const eps = Object.keys(item.seasons[sNum] || {}).map(epNum => 
-                        `<span class="ep-btn">С${sNum} Е${epNum}</span>`
-                    ).join('');
-                    return `<div><small style="color:#888;">Сезон ${sNum}:</small> ${eps}</div>`;
+                    const epsObj = item.seasons[sNum] || {};
+                    const eps = Object.keys(epsObj).map(epNum => {
+                        const url = typeof epsObj[epNum] === 'string' ? epsObj[epNum] : (epsObj[epNum]?.url || '#');
+                        return `<a href="${url}" class="ep-btn" onclick="onEpClick('${animeId}', '${sNum}', '${epNum}')">С${sNum} Е${epNum}</a>`;
+                    }).join('');
+                    return `<div style="margin-bottom:4px;"><small style="color:#888;">Сезон ${sNum}:</small> ${eps}</div>`;
                 }).join('');
+
+                // Генерация 10 звезд рейтинга
+                let starsHtml = '';
+                for (let i = 1; i <= 10; i++) {
+                    starsHtml += `<span class="star" data-value="${i}" onclick="setRating('${animeId}', ${i})" onmouseover="hoverStars('${animeId}', ${i})" onmouseout="resetStars('${animeId}')">★</span>`;
+                }
 
                 return `
                     <div class="anime-card" id="card-${animeId}">
                         <div>
                             ${posterTag}
                             <div class="anime-title">
-                                <span>${item.title || ('Аниме #' + animeId)}</span>
-                                <button style="background:none;border:none;font-size:20px;cursor:pointer;" onclick="toggleFav('${animeId}')">🤍</button>
+                                <span>${item.title}</span>
+                                <button class="fav-btn" onclick="toggleFav('${animeId}')">🤍</button>
                             </div>
+
                             <div class="status-group">
                                 <div class="status-btn" onclick="setStatus('${animeId}', 'watching')">👀 Смотрю</div>
                                 <div class="status-btn" onclick="setStatus('${animeId}', 'completed')">✅ Просмотрено</div>
                                 <div class="status-btn" onclick="setStatus('${animeId}', 'planned')">📌 В планах</div>
                                 <div class="status-btn" onclick="setStatus('${animeId}', 'dropped')">❌ Брошено</div>
                             </div>
+
+                            <!-- Красивый неоновый блок рейтинга -->
+                            <div class="star-rating-container">
+                                <div class="rating-header">
+                                    <span>Ваша оценка:</span>
+                                    <strong id="rating-val-${animeId}" style="color:#f24b1f;">Не выставили</strong>
+                                </div>
+                                <div class="star-bar" id="star-bar-${animeId}">
+                                    ${starsHtml}
+                                </div>
+                            </div>
                         </div>
+
                         <div class="episodes-box">
-                            <strong>Серии из канала:</strong>
-                            ${seasonsHtml || '<div style="color:#666;">Серии не привязаны</div>'}
+                            <strong>Серии:</strong>
+                            <div style="margin-top:4px;">
+                                ${seasonsHtml || '<div style="color:#666;">Серии скоро появятся</div>'}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -405,6 +528,7 @@
             renderLibraryState();
         }
 
+        // Загрузка пользовательских статусов
         function loadLibrary() {
             return new Promise((resolve) => {
                 const cloudKey = `library_${activeUser.id}`;
@@ -423,13 +547,40 @@
             });
         }
 
+        // Отрисовка состояния библиотеки пользователя (Статусы, Звезды, Избранное)
         function renderLibraryState() {
             userStore.items = userStore.items || {};
-            Object.keys(userStore.items).forEach(animeId => {
+
+            Object.keys(catalogData).forEach(animeId => {
                 const cardEl = document.getElementById(`card-${animeId}`);
                 if (!cardEl) return;
-                const itemData = userStore.items[animeId];
 
+                const itemData = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+                // Сердечко
+                const favBtn = cardEl.querySelector('.fav-btn');
+                if (favBtn) favBtn.innerText = itemData.is_fav ? '❤️' : '🤍';
+
+                // Звездочки
+                const starBar = document.getElementById(`star-bar-${animeId}`);
+                const ratingDisplay = document.getElementById(`rating-val-${animeId}`);
+
+                if (ratingDisplay) {
+                    ratingDisplay.innerText = itemData.rating > 0 ? `⭐ ${itemData.rating}/10` : 'Не выставили';
+                }
+
+                if (starBar) {
+                    const stars = starBar.querySelectorAll('.star');
+                    stars.forEach((star, index) => {
+                        if (index < itemData.rating) {
+                            star.classList.add('active');
+                        } else {
+                            star.classList.remove('active');
+                        }
+                    });
+                }
+
+                // Статусы
                 const statusBtns = cardEl.querySelectorAll('.status-btn');
                 statusBtns.forEach(btn => {
                     btn.className = 'status-btn';
@@ -442,17 +593,75 @@
             });
         }
 
-        async function setStatus(animeId, statusName) {
+        // ⭐ Подсветка звезд при наведении
+        function hoverStars(animeId, starVal) {
+            const starBar = document.getElementById(`star-bar-${animeId}`);
+            if (!starBar) return;
+            const stars = starBar.querySelectorAll('.star');
+            stars.forEach((s, idx) => {
+                if (idx < starVal) {
+                    s.classList.add('hovered');
+                } else {
+                    s.classList.remove('hovered');
+                }
+            });
+        }
+
+        function resetStars(animeId) {
+            const starBar = document.getElementById(`star-bar-${animeId}`);
+            if (!starBar) return;
+            const stars = starBar.querySelectorAll('.star');
+            stars.forEach(s => s.classList.remove('hovered'));
+        }
+
+        // ⭐ Установка рейтинга пользователем
+        async function setRating(animeId, ratingVal) {
             userStore.items = userStore.items || {};
             const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
-            current.status = (current.status === statusName) ? 'none' : statusName;
+
+            current.rating = ratingVal;
+            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
+
             userStore.items[animeId] = current;
             renderLibraryState();
             await saveLibrary();
         }
 
+        // Изменение статуса
+        async function setStatus(animeId, statusName) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+            current.status = (current.status === statusName) ? 'none' : statusName;
+            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
+
+            userStore.items[animeId] = current;
+            renderLibraryState();
+            await saveLibrary();
+        }
+
+        // Переключение избранного
+        async function toggleFav(animeId) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
+
+            current.is_fav = !current.is_fav;
+            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
+
+            userStore.items[animeId] = current;
+            renderLibraryState();
+            await saveLibrary();
+        }
+
+        function onEpClick(animeId, season, ep) {
+            // Клик по серии
+            setStatus(animeId, 'watching');
+        }
+
+        // Сохранение в CloudStorage + отправка в Канал -1003952561478
         async function saveLibrary() {
             document.getElementById('sync-status').innerText = '⚡ Сохранение...';
+
             const cloudKey = `library_${activeUser.id}`;
             if (tg?.CloudStorage) {
                 tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
@@ -472,6 +681,8 @@
                 })
             }).then(() => {
                 document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
+            }).catch(() => {
+                document.getElementById('sync-status').innerText = '⚡ Сохранено';
             });
         }
 
