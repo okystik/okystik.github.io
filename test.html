@@ -3,500 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AniPanda - Премиум Кинотеатр</title>
-
-    <!-- Telegram WebApp SDK & Ionicons -->
+    <title>AniPanda - Народный Рейтинг</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #111111; color: #ffffff; padding-bottom: 70px; user-select: none; }
 
-        body {
-            background-color: #111111;
-            color: #ffffff;
-            padding-bottom: 70px; /* Запас под нижнюю панель */
-            user-select: none;
-        }
+        .tab-content { display: none; padding: 12px; max-width: 1000px; margin: 0 auto; }
+        .tab-content.active { display: block; }
 
-        /* 1. Вкладки (Tabs) */
-        .tab-content {
-            display: none;
-            padding: 12px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        /* Сетка Плиток */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        @media (min-width: 480px) { .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; } }
 
-        .tab-content.active {
-            display: block;
-        }
+        .card-tile { background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+        .poster-wrapper { position: relative; width: 100%; height: 200px; overflow: hidden; background: #181818; }
+        .poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 2. Поиск и Фильтры верхнего меню */
-        .search-bar-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            align-items: center;
-        }
-
-        input[type="search"] {
-            flex: 1;
-            padding: 10px 14px;
-            height: 40px;
-            background-color: #1f1f1f;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        input[type="search"]:focus {
-            outline: none;
-            border-color: #f24b1f;
-        }
-
-        /* 3. Адаптивная Сетка Плиток (как в stayle.css) */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 12px;
-        }
-
-        @media (min-width: 480px) {
-            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-        }
-
-        @media (min-width: 768px) {
-            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        }
-
-        /* Карточка Аниме */
-        .card-tile {
-            background: #1f1f1f;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .poster-wrapper {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            background: #181818;
-        }
-
-        .poster-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-        }
-
-        /* Плашка общего рейтинга (Top Right Badge) */
+        /* Настоящий живой плашка-рейтинг на обложке */
         .rating-badge {
             position: absolute;
             top: 6px;
             right: 6px;
-            background-color: rgba(17, 17, 17, 0.9);
+            background-color: rgba(17, 17, 17, 0.92);
             padding: 4px 8px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #ffcc00;
             backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            gap: 3px;
+            border: 1px solid rgba(255,204,0,0.3);
         }
 
-        .card-details {
-            padding: 10px;
-        }
+        .card-details { padding: 10px; }
+        .card-details h3 { font-size: 14px; font-weight: bold; color: #ececec; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .card-details h3 {
-            font-size: 14px;
-            font-weight: bold;
-            color: #ececec;
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .status-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 8px 0; }
+        .btn-status { padding: 6px 2px; font-size: 10px; background: #282828; color: #aaa; border: 1px solid #383838; border-radius: 6px; cursor: pointer; text-align: center; font-weight: bold; }
+        .btn-status.act-watching { background: #1976d2; color: #fff; }
+        .btn-status.act-completed { background: #2e7d32; color: #fff; }
+        .btn-status.act-planned { background: #ed6c02; color: #fff; }
+        .btn-status.act-dropped { background: #d32f2f; color: #fff; }
 
-        /* Кнопки статусов */
-        .status-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-            margin: 8px 0;
-        }
-
-        .btn-status {
-            padding: 6px 2px;
-            font-size: 10px;
-            background: #282828;
-            color: #aaa;
-            border: 1px solid #383838;
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .btn-status.act-watching { background: #1976d2; color: #fff; border-color: #2196f3; }
-        .btn-status.act-completed { background: #2e7d32; color: #fff; border-color: #4caf50; }
-        .btn-status.act-planned { background: #ed6c02; color: #fff; border-color: #ff9800; }
-        .btn-status.act-dropped { background: #d32f2f; color: #fff; border-color: #f44336; }
-
-        /* ИНТЕРАКТИВНЫЕ ЗВЕЗДЫ ЛИЧНОГО РЕЙТИНГА */
-        .personal-rating-box {
-            background: #141414;
-            padding: 6px 8px;
-            border-radius: 6px;
-            margin-top: 6px;
-        }
-
-        .personal-rating-title {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 4px;
-        }
-
-        .star-bar {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .star-bar .star {
-            font-size: 14px;
-            color: #383838;
-            cursor: pointer;
-            transition: color 0.15s;
-        }
-
+        /* Выставление своей оценки */
+        .personal-rating-box { background: #141414; padding: 6px 8px; border-radius: 6px; margin-top: 6px; }
+        .personal-rating-title { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-bottom: 4px; }
+        .star-bar { display: flex; justify-content: space-between; }
+        .star-bar .star { font-size: 14px; color: #383838; cursor: pointer; transition: color 0.15s; }
         .star-bar .star:hover, .star-bar .star.hovered { color: #ffb703; }
         .star-bar .star.active { color: #f24b1f; text-shadow: 0 0 6px rgba(242, 75, 31, 0.6); }
 
-        /* Серии */
-        .episodes-box {
-            padding: 8px 10px;
-            background: #161616;
-            border-top: 1px solid #282828;
-            font-size: 11px;
-        }
-
-        .ep-btn {
-            display: inline-block;
-            background: #262626;
-            color: #ddd;
-            padding: 4px 8px;
-            margin: 2px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 11px;
-            border: 1px solid #333;
-        }
-        .ep-btn:hover { background: #f24b1f; color: #fff; }
-
-        /* 4. Вкладка "Профиль" */
-        .profile-card {
-            background: #1f1f1f;
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            max-width: 400px;
-            margin: 20px auto;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: #2a2a2a;
-            border: 2px solid #f24b1f;
-            border-radius: 50%;
-            margin: 0 auto 16px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-        }
-
-        .profile-id-badge {
-            display: inline-block;
-            background: #141414;
-            color: #4caf50;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            margin: 10px 0 20px 0;
-            border: 1px solid #333;
-        }
-
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            background: #f24b1f;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 10px;
-            background: #2a2a2a;
-            color: #aaa;
-            border: 1px solid #444;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #111;
-            color: #fff;
-            text-align: center;
-        }
-
-        /* 5. Нижнее Навигационное Меню (Down Navbar) */
-        .downnavbarmain {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            height: 50px;
-            background-color: rgba(36, 36, 36, 0.9);
-            backdrop-filter: blur(12px);
-            border-radius: 12px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            border: 1px solid #333;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            cursor: pointer;
-            font-size: 10px;
-            transition: color 0.2s;
-        }
-
-        .nav-item ion-icon {
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
-
-        .nav-item.active {
-            color: #f24b1f;
-        }
+        .profile-card { background: #1f1f1f; border: 1px solid #333; border-radius: 16px; padding: 24px; text-align: center; max-width: 400px; margin: 20px auto; }
+        .downnavbarmain { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; height: 50px; background-color: rgba(36, 36, 36, 0.9); backdrop-filter: blur(12px); border-radius: 12px; z-index: 1000; display: flex; align-items: center; justify-content: space-around; border: 1px solid #333; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; cursor: pointer; font-size: 10px; }
+        .nav-item.active { color: #f24b1f; }
+        .nav-item ion-icon { font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- ========================================================================= -->
-    <!-- ВКТАДКА 1: ГЛАВНАЯ (Каталог Аниме) -->
-    <!-- ========================================================================= -->
+    <!-- ВКЛАДКА 1: ГЛАВНАЯ -->
     <div id="tab-home" class="tab-content active">
-        
-        <!-- Поиск -->
-        <div class="search-bar-box">
-            <input type="search" id="search-input" placeholder="Поиск аниме..." oninput="onSearch(this.value)">
-        </div>
-
-        <!-- Сетка Плиток -->
-        <div id="catalog-grid" class="cards-grid">
-            <!-- Динамически рендерится из JSON -->
-        </div>
+        <h3 style="margin-bottom: 12px;">📚 Каталог Аниме (Народный Рейтинг):</h3>
+        <div id="catalog-grid" class="cards-grid"></div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- ВКЛАДКА 2: МОЁ (Закладки и Сохранения) -->
-    <!-- ========================================================================= -->
+    <!-- ВКЛАДКА 2: МОЁ -->
     <div id="tab-library" class="tab-content">
-        <h3 style="margin-bottom: 14px;">📌 Ваша сохраненная библиотека:</h3>
-        <div id="library-grid" class="cards-grid">
-            <!-- Отображаются сохраненные аниме -->
-        </div>
+        <h3 style="margin-bottom: 12px;">📌 Ваша библиотека:</h3>
+        <div id="library-grid" class="cards-grid"></div>
     </div>
 
-    <!-- ========================================================================= -->
     <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
-    <!-- ========================================================================= -->
     <div id="tab-profile" class="tab-content">
         <div class="profile-card">
-            <div class="profile-avatar">👤</div>
-            <h2 id="profile-name" style="margin: 0; font-size: 20px;">Загрузка...</h2>
-            <div>
-                <span id="profile-id" class="profile-id-badge">ID: ...</span>
-            </div>
-            
-            <p style="font-size: 12px; color: #888; margin-bottom: 20px;">
-                Статус синхронизации: <span id="sync-status" style="color: #4caf50;">☁️ Подключено к ТГ</span>
-            </p>
-
-            <button class="btn-action" onclick="toggleImpersonateForm()">Войти под другим Telegram ID</button>
-
-            <!-- Форма входа под другим ID -->
-            <div id="impersonate-box" style="display: none; margin-top: 15px;">
-                <input type="text" id="target-id-input" placeholder="Введите чужой TG ID">
-                <button class="btn-action" style="background:#2e7d32;" onclick="switchUserManual()">Смотреть профиль</button>
-                <button class="btn-secondary" onclick="resetUserManual()">Сбросить на свой ID</button>
-            </div>
+            <div style="font-size: 48px; margin-bottom: 10px;">👤</div>
+            <h2 id="profile-name">Загрузка...</h2>
+            <p id="profile-id" style="color: #4caf50; font-weight: bold; margin: 10px 0;">ID: ...</p>
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ -->
-    <!-- ========================================================================= -->
+    <!-- НИЖНЯЯ ПАНЕЛЬ -->
     <div class="downnavbarmain">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <ion-icon name="home"></ion-icon>
-            <span>Главная</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('library', this)">
-            <ion-icon name="bookmark"></ion-icon>
-            <span>Моё</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('profile', this)">
-            <ion-icon name="person"></ion-icon>
-            <span>Профиль</span>
-        </div>
+        <div class="nav-item active" onclick="switchTab('home', this)"><ion-icon name="home"></ion-icon><span>Главная</span></div>
+        <div class="nav-item" onclick="switchTab('library', this)"><ion-icon name="bookmark"></ion-icon><span>Моё</span></div>
+        <div class="nav-item" onclick="switchTab('profile', this)"><ion-icon name="person"></ion-icon><span>Профиль</span></div>
     </div>
 
     <script>
         const API_URL = 'https://functions.yandexcloud.net/d4evib2sgptv8r0rvtht';
 
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
+        if (tg) { tg.ready(); tg.expand(); }
 
-        // Каталог по умолчанию (если anime_data.json еще грузится)
+        // Каталог БЕЗ ЗАРАНЕЕ ПРОПИСАННЫХ РЕЙТИНГОВ
         let catalogData = {
-            '001': {
-                id: '001',
-                title: 'Атака Титанов',
-                rating: 4.8,
-                poster_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500',
-                seasons: { '01': { '01': 'https://t.me/c/1570317776/4030', '02': 'https://t.me/c/1570317776/4031' } }
-            },
-            '002': {
-                id: '002',
-                title: 'Наруто: Ураганные хроники',
-                rating: 4.6,
-                poster_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500',
-                seasons: { '01': { '01': 'https://t.me/c/1570317776/3996' } }
-            },
-            '003': {
-                id: '003',
-                title: 'Магическая битва',
-                rating: 4.7,
-                poster_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500',
-                seasons: { '01': { '01': 'https://t.me/c/1570317776/3310' } }
-            }
+            '001': { id: '001', title: 'Атака Титанов', poster_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500' },
+            '002': { id: '002', title: 'Наруто: Ураганные хроники', poster_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500' },
+            '003': { id: '003', title: 'Магическая битва', poster_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500' }
         };
 
+        // Хранилище динамических рейтингов
+        let globalRatings = {};
         let userStore = { items: {} };
 
-        // Авторизация пользователя
         function getRealUser() {
             if (tg?.initDataUnsafe?.user?.id) {
                 const u = tg.initDataUnsafe.user;
-                return {
-                    id: u.id.toString(),
-                    name: u.first_name + (u.username ? ` (@${u.username})` : '')
-                };
+                return { id: u.id.toString(), name: u.first_name + (u.username ? ` (@${u.username})` : '') };
             }
             const shared = localStorage.getItem('tg_shared_user');
             if (shared) { try { return JSON.parse(shared); } catch(e){} }
-            return { id: '100001', name: 'Тестовый Пользователь' };
+            return { id: '100001', name: 'Гость' };
         }
 
-        function getActiveUserId() {
-            return localStorage.getItem('view_as_id') || getRealUser().id;
-        }
-
-        // =========================================================================
-        // 1. ИНИЦИАЛИЗАЦИЯ И ТАБЫ
-        // =========================================================================
         async function initApp() {
-            const realUser = getRealUser();
-            const activeId = getActiveUserId();
+            const user = getRealUser();
+            document.getElementById('profile-id').innerText = `ID: ${user.id}`;
+            document.getElementById('profile-name').innerText = user.name;
 
-            document.getElementById('profile-id').innerText = `ID: ${activeId}`;
-            document.getElementById('profile-name').innerText = (activeId === realUser.id) ? realUser.name : `Просмотр #${activeId}`;
-
-            await fetchCatalog();
+            await fetchGlobalRatings();
             await loadUserLibrary();
+            renderCatalogUI(catalogData, 'catalog-grid');
         }
 
-        function switchTab(tabName, el) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            el.classList.add('active');
-
-            if (tabName === 'library') {
-                renderLibraryTab();
-            }
-        }
-
-        // =========================================================================
-        // 2. КАТАЛОГ И ПОСТЕРЫ
-        // =========================================================================
-        async function fetchCatalog() {
+        // Загрузка живых рейтингов с Яндекс Облака
+        async function fetchGlobalRatings() {
             try {
-                const res = await fetch('anime_data.json');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data)) {
-                        catalogData = {};
-                        data.forEach(item => {
-                            catalogData[item.id || item.name] = {
-                                id: item.id || item.name,
-                                title: item.name,
-                                rating: item.rating || 4.5,
-                                poster_url: item.image,
-                                seasons: item.seasons || {}
-                            };
-                        });
-                    }
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_ratings' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    globalRatings = data.global_ratings || {};
                 }
             } catch(e) {}
-
-            renderCatalogUI(catalogData, 'catalog-grid');
         }
 
         function renderCatalogUI(dataObj, containerId) {
@@ -510,37 +154,29 @@
 
             container.innerHTML = keys.map(animeId => {
                 const item = dataObj[animeId];
-                const poster = item.poster_url 
-                    ? `<img src="${item.poster_url}" alt="${item.title}">`
-                    : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#555;">Нет обложки</div>`;
+                const ratingInfo = globalRatings[animeId];
+                
+                // Вычисляем отображение рейтинга
+                const badgeText = (ratingInfo && ratingInfo.count > 0)
+                    ? `★ ${ratingInfo.avg} (${ratingInfo.count})`
+                    : `★ Нет оценок`;
 
-                const seasonsHtml = Object.keys(item.seasons || {}).map(sNum => {
-                    const epsObj = item.seasons[sNum] || {};
-                    const eps = Object.keys(epsObj).map(epNum => {
-                        const url = typeof epsObj[epNum] === 'string' ? epsObj[epNum] : (epsObj[epNum]?.url || '#');
-                        return `<a href="${url}" class="ep-btn" onclick="onEpClick('${animeId}')">С${sNum} Е${epNum}</a>`;
-                    }).join('');
-                    return `<div style="margin-bottom:2px;"><small style="color:#777;">Сезон ${sNum}:</small> ${eps}</div>`;
-                }).join('');
-
-                // 10 Неоновых звездочек для личного рейтинга
                 let starsHtml = '';
                 for (let i = 1; i <= 10; i++) {
-                    starsHtml += `<span class="star" data-val="${i}" onclick="setPersonalRating('${animeId}', ${i})" onmouseover="hoverStars('${animeId}', ${i})" onmouseout="resetStars('${animeId}')">★</span>`;
+                    starsHtml += `<span class="star" data-val="${i}" onclick="rateAnime('${animeId}', ${i})" onmouseover="hoverStars('${animeId}', ${i})" onmouseout="resetStars('${animeId}')">★</span>`;
                 }
 
                 return `
                     <div class="card-tile" id="card-${animeId}">
                         <div class="poster-wrapper">
-                            ${poster}
-                            <!-- Общий рейтинг сообщества -->
-                            <div class="rating-badge">★ ${item.rating || 4.5}</div>
+                            <img src="${item.poster_url}" alt="${item.title}">
+                            <!-- НАСТОЯЩИЙ НАРОДНЫЙ РЕЙТИНГ -->
+                            <div class="rating-badge" id="badge-${animeId}">${badgeText}</div>
                         </div>
 
                         <div class="card-details">
                             <h3>${item.title}</h3>
 
-                            <!-- Кнопки статуса -->
                             <div class="status-buttons">
                                 <div class="btn-status" onclick="setStatus('${animeId}', 'watching')">👀 Смотрю</div>
                                 <div class="btn-status" onclick="setStatus('${animeId}', 'completed')">✅ Просмотрено</div>
@@ -548,20 +184,15 @@
                                 <div class="btn-status" onclick="setStatus('${animeId}', 'dropped')">❌ Брошено</div>
                             </div>
 
-                            <!-- Личный неоновый рейтинг -->
                             <div class="personal-rating-box">
                                 <div class="personal-rating-title">
                                     <span>Ваша оценка:</span>
-                                    <strong id="my-rating-val-${animeId}" style="color:#f24b1f;">-</strong>
+                                    <strong id="my-rating-${animeId}" style="color:#f24b1f;">-</strong>
                                 </div>
                                 <div class="star-bar" id="star-bar-${animeId}">
                                     ${starsHtml}
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="episodes-box">
-                            ${seasonsHtml || '<span style="color:#666;">Серии скоро...</span>'}
                         </div>
                     </div>
                 `;
@@ -570,53 +201,81 @@
             applyUserLibraryToUI();
         }
 
-        // =========================================================================
-        // 3. РАБОТА С ЛИЧНЫМ ПРОФИЛЕМ И ОБЛАКОМ
-        // =========================================================================
-        function loadUserLibrary() {
-            return new Promise((resolve) => {
-                const activeId = getActiveUserId();
-                const cloudKey = `library_${activeId}`;
+        // ⭐ ГОЛОСОВАНИЕ И ПЕРЕСЧЕТ РЕЙТИНГА В РЕАЛЬНОМ ВРЕМЕНИ
+        async function rateAnime(animeId, score) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0 };
+            current.rating = score;
+            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
+            userStore.items[animeId] = current;
 
-                if (tg?.CloudStorage) {
-                    tg.CloudStorage.getItem(cloudKey, (err, val) => {
-                        if (!err && val) { try { userStore = JSON.parse(val); } catch(e){} }
-                        applyUserLibraryToUI();
-                        resolve();
-                    });
-                } else {
-                    const saved = localStorage.getItem(cloudKey);
-                    if (saved) { try { userStore = JSON.parse(saved); } catch(e){} }
-                    applyUserLibraryToUI();
-                    resolve();
+            applyUserLibraryToUI();
+            saveUserLibraryLocally();
+
+            // Отправляем голос на Яндекс Облако
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rate_and_sync',
+                        initData: tg?.initData || "",
+                        user_id: getRealUser().id,
+                        user_name: getRealUser().name,
+                        anime_id: animeId,
+                        score: score,
+                        items: userStore.items
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success && data.new_global_rating) {
+                    // МГНОВЕННО обновляем плашку с новым народным рейтингом!
+                    globalRatings[animeId] = data.new_global_rating;
+                    const badge = document.getElementById(`badge-${animeId}`);
+                    if (badge) {
+                        badge.innerText = `★ ${data.new_global_rating.avg} (${data.new_global_rating.count})`;
+                    }
                 }
-            });
+            } catch(e) {}
+        }
+
+        function hoverStars(animeId, val) {
+            const bar = document.getElementById(`star-bar-${animeId}`);
+            if (bar) bar.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('hovered', i < val));
+        }
+
+        function resetStars(animeId) {
+            const bar = document.getElementById(`star-bar-${animeId}`);
+            if (bar) bar.querySelectorAll('.star').forEach(s => s.classList.remove('hovered'));
+        }
+
+        async function setStatus(animeId, statusName) {
+            userStore.items = userStore.items || {};
+            const current = userStore.items[animeId] || { status: 'none', rating: 0 };
+            current.status = (current.status === statusName) ? 'none' : statusName;
+            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
+            userStore.items[animeId] = current;
+
+            applyUserLibraryToUI();
+            saveUserLibraryLocally();
         }
 
         function applyUserLibraryToUI() {
             userStore.items = userStore.items || {};
-
             Object.keys(catalogData).forEach(animeId => {
                 const cardEl = document.getElementById(`card-${animeId}`);
                 if (!cardEl) return;
-
                 const itemData = userStore.items[animeId] || { status: 'none', rating: 0 };
 
-                // Рейтинг Звезд
-                const ratingDisplay = document.getElementById(`my-rating-val-${animeId}`);
-                if (ratingDisplay) {
-                    ratingDisplay.innerText = itemData.rating > 0 ? `${itemData.rating}/10` : '-';
-                }
+                const ratingDisplay = document.getElementById(`my-rating-${animeId}`);
+                if (ratingDisplay) ratingDisplay.innerText = itemData.rating > 0 ? `${itemData.rating}/10` : '-';
 
                 const starBar = document.getElementById(`star-bar-${animeId}`);
                 if (starBar) {
-                    const stars = starBar.querySelectorAll('.star');
-                    stars.forEach((s, idx) => {
-                        s.classList.toggle('active', idx < itemData.rating);
-                    });
+                    starBar.querySelectorAll('.star').forEach((s, idx) => s.classList.toggle('active', idx < itemData.rating));
                 }
 
-                // Статусы
                 const btns = cardEl.querySelectorAll('.btn-status');
                 btns.forEach(btn => {
                     btn.className = 'btn-status';
@@ -629,117 +288,44 @@
             });
         }
 
-        // ⭐ Анимация звезд
-        function hoverStars(animeId, starVal) {
-            const starBar = document.getElementById(`star-bar-${animeId}`);
-            if (!starBar) return;
-            starBar.querySelectorAll('.star').forEach((s, idx) => {
-                s.classList.toggle('hovered', idx < starVal);
+        function loadUserLibrary() {
+            return new Promise((resolve) => {
+                const cloudKey = `library_${getRealUser().id}`;
+                if (tg?.CloudStorage) {
+                    tg.CloudStorage.getItem(cloudKey, (err, val) => {
+                        if (!err && val) { try { userStore = JSON.parse(val); } catch(e){} }
+                        resolve();
+                    });
+                } else {
+                    const saved = localStorage.getItem(cloudKey);
+                    if (saved) { try { userStore = JSON.parse(saved); } catch(e){} }
+                    resolve();
+                }
             });
         }
 
-        function resetStars(animeId) {
-            const starBar = document.getElementById(`star-bar-${animeId}`);
-            if (!starBar) return;
-            starBar.querySelectorAll('.star').forEach(s => s.classList.remove('hovered'));
+        function saveUserLibraryLocally() {
+            const cloudKey = `library_${getRealUser().id}`;
+            if (tg?.CloudStorage) tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
+            else localStorage.setItem(cloudKey, JSON.stringify(userStore));
         }
 
-        // ⭐ Установка личной оценки
-        async function setPersonalRating(animeId, ratingVal) {
-            userStore.items = userStore.items || {};
-            const current = userStore.items[animeId] || { status: 'none', rating: 0 };
-            current.rating = ratingVal;
-            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
-            userStore.items[animeId] = current;
+        function switchTab(tabName, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
-            applyUserLibraryToUI();
-            await saveUserLibrary();
-        }
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            el.classList.add('active');
 
-        async function setStatus(animeId, statusName) {
-            userStore.items = userStore.items || {};
-            const current = userStore.items[animeId] || { status: 'none', rating: 0 };
-            current.status = (current.status === statusName) ? 'none' : statusName;
-            current.title = catalogData[animeId]?.title || `Аниме #${animeId}`;
-            userStore.items[animeId] = current;
-
-            applyUserLibraryToUI();
-            await saveUserLibrary();
-        }
-
-        function onEpClick(animeId) {
-            setStatus(animeId, 'watching');
-        }
-
-        async function saveUserLibrary() {
-            const activeId = getActiveUserId();
-            const cloudKey = `library_${activeId}`;
-
-            if (tg?.CloudStorage) {
-                tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
-            } else {
-                localStorage.setItem(cloudKey, JSON.stringify(userStore));
+            if (tabName === 'library') {
+                const savedItems = {};
+                Object.keys(userStore.items || {}).forEach(id => {
+                    if (userStore.items[id].status !== 'none' || userStore.items[id].rating > 0) {
+                        if (catalogData[id]) savedItems[id] = catalogData[id];
+                    }
+                });
+                renderCatalogUI(savedItems, 'library-grid');
             }
-
-            fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'update_channel',
-                    initData: localStorage.getItem('tg_shared_initdata') || tg?.initData || "",
-                    user_id: activeId,
-                    user_name: getRealUser().name,
-                    items: userStore.items
-                })
-            }).catch(e => console.error(e));
-        }
-
-        // =========================================================================
-        // 4. ВКЛАДКА "МОЁ" И ПОИСК
-        // =========================================================================
-        function renderLibraryTab() {
-            const savedItems = {};
-            userStore.items = userStore.items || {};
-
-            Object.keys(userStore.items).forEach(id => {
-                if (userStore.items[id].status !== 'none' || userStore.items[id].rating > 0) {
-                    if (catalogData[id]) savedItems[id] = catalogData[id];
-                }
-            });
-
-            renderCatalogUI(savedItems, 'library-grid');
-        }
-
-        function onSearch(query) {
-            const term = query.trim().toLowerCase();
-            const filtered = {};
-
-            Object.keys(catalogData).forEach(id => {
-                const item = catalogData[id];
-                if (item.title.toLowerCase().includes(term)) {
-                    filtered[id] = item;
-                }
-            });
-
-            renderCatalogUI(filtered, 'catalog-grid');
-        }
-
-        // Управление входом под другим ID
-        function toggleImpersonateForm() {
-            const box = document.getElementById('impersonate-box');
-            box.style.display = (box.style.display === 'none') ? 'block' : 'none';
-        }
-
-        function switchUserManual() {
-            const val = document.getElementById('target-id-input').value.trim();
-            if (!val) return alert("Введите ID!");
-            localStorage.setItem('view_as_id', val);
-            location.reload();
-        }
-
-        function resetUserManual() {
-            localStorage.removeItem('view_as_id');
-            location.reload();
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
