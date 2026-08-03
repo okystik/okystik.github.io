@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тестовое Меню - Аниме</title>
+    <title>Кинотеатр</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -12,66 +12,84 @@
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 16px;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        .prompt-card {
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 420px;
-            margin: 40px auto;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-
-        .avatar-box {
-            width: 72px;
-            height: 72px;
-            background: #2a2a2a;
-            border: 2px solid #f24b1f;
-            border-radius: 50%;
-            margin: 0 auto 16px auto;
+        .centered-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .id-badge {
-            display: inline-block;
-            background: #141414;
+        .auth-card {
+            background: #1e1e1e;
             border: 1px solid #333;
-            color: #4caf50;
-            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            margin: 8px 0 20px 0;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
         }
 
-        button.action-btn {
+        .nickname-box {
+            font-size: 18px;
+            color: #f24b1f;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        button.primary-btn {
             width: 100%;
             padding: 14px;
-            background: #2e7d32;
+            background: #f24b1f;
             color: #fff;
             border: none;
             border-radius: 10px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
 
-        button.secondary-btn {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            color: #888;
+        .alt-link {
+            background: none;
             border: none;
+            color: #888;
             font-size: 13px;
             cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            background: #2a2a2a;
+            color: #ccc;
+            border: 1px solid #444;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #111;
+            color: #fff;
+            text-align: center;
+        }
+
+        .app-container {
+            padding: 16px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .header-card {
@@ -95,22 +113,33 @@
         .anime-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 16px;
+            gap: 20px;
             margin-bottom: 20px;
         }
 
-        @media (min-width: 480px) {
+        @media (min-width: 520px) {
             .anime-grid { grid-template-columns: 1fr 1fr; }
         }
 
+        /* Карточка с Постером */
         .anime-card {
             background: #1e1e1e;
             border: 1px solid #333;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 14px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #111;
         }
 
         .anime-title {
@@ -120,15 +149,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .fav-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0;
-            width: auto;
         }
 
         .status-group {
@@ -150,159 +170,76 @@
             text-align: center;
         }
 
-        .status-btn.active-watching { background: #1976d2; color: #fff; border-color: #2196f3; }
-        .status-btn.active-completed { background: #2e7d32; color: #fff; border-color: #4caf50; }
-        .status-btn.active-planned { background: #ed6c02; color: #fff; border-color: #ff9800; }
-        .status-btn.active-dropped { background: #d32f2f; color: #fff; border-color: #f44336; }
+        .status-btn.active-watching { background: #1976d2; color: #fff; }
+        .status-btn.active-completed { background: #2e7d32; color: #fff; }
+        .status-btn.active-planned { background: #ed6c02; color: #fff; }
+        .status-btn.active-dropped { background: #d32f2f; color: #fff; }
 
-        .rating-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .episodes-box {
             background: #141414;
-            padding: 6px 10px;
+            padding: 8px;
             border-radius: 6px;
-            margin-top: 6px;
-        }
-
-        select {
-            background: #222;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 4px 8px;
-            border-radius: 4px;
+            margin-top: 10px;
             font-size: 12px;
         }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 12px 0;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #111;
+        .ep-btn {
+            display: inline-block;
+            background: #333;
             color: #fff;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. ЭКРАН ПОДТВЕРЖДЕНИЯ (Если ID подхвачен с главной страницы) -->
-    <div id="screen-prompt" class="prompt-card" style="display: none;">
-        <div class="avatar-box">👤</div>
-        <h2 style="margin: 0 0 6px 0; font-size: 20px;">Здравствуйте!</h2>
-        <p style="color: #aaa; font-size: 13px; margin: 0;">Распознан ваш аккаунт Telegram:</p>
-        
-        <div>
-            <span id="prompt-id" class="id-badge">ID: ...</span>
+    <!-- 1. ЦЕНТРИРОВАННЫЙ ЭКРАН ВХОДА -->
+    <div id="screen-prompt" class="centered-container" style="display: none;">
+        <div class="auth-card">
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 6px;">Привет! 👋</div>
+            <div id="prompt-nickname" class="nickname-box">Загрузка...</div>
+
+            <button class="primary-btn" onclick="confirmLogin()">Войти</button>
+
+            <div>
+                <button class="alt-link" onclick="showManualScreen()">(Войти по другому Telegram ID)</button>
+            </div>
         </div>
-
-        <button id="btn-confirm-login" class="action-btn" onclick="confirmLogin()">
-            🚀 Войти в профиль
-        </button>
-
-        <button class="secondary-btn" onclick="showManualScreen()">
-            Ввести другой ID вручную
-        </button>
     </div>
 
-    <!-- 2. ЭКРАН РУЧНОГО ВВОДА (Только если зашли с улицы) -->
-    <div id="screen-manual" class="prompt-card" style="display: none;">
-        <div class="avatar-box">🔑</div>
-        <h2 style="margin: 0 0 6px 0; font-size: 20px;">Вход по Telegram ID</h2>
-        <p style="color: #aaa; font-size: 13px; margin: 0;">Введите ваш Telegram ID для загрузки профиля:</p>
-        
-        <input type="text" id="manual-input-id" placeholder="Например: 593810291">
+    <!-- 2. ЭКРАН РУЧНОГО ВВОДА ID -->
+    <div id="screen-manual" class="centered-container" style="display: none;">
+        <div class="auth-card">
+            <h3 style="margin: 0 0 8px 0;">Вход по другому ID</h3>
+            <p style="color: #aaa; font-size: 12px; margin: 0;">Введите Telegram ID профиля:</p>
 
-        <button class="action-btn" style="background: #f24b1f;" onclick="loginManual()">
-            Войти в аккаунт
-        </button>
+            <input type="text" id="manual-input-id" placeholder="Например: 593810291">
+
+            <button class="primary-btn" onclick="loginManual()">Войти в этот аккаунт</button>
+            
+            <button id="btn-back-to-nickname" class="back-btn" onclick="backToPrompt()">
+                ⬅️ Вернуться назад
+            </button>
+        </div>
     </div>
 
-    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС -->
-    <div id="screen-app" style="display: none;">
+    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС КАТАЛОГА -->
+    <div id="screen-app" class="app-container" style="display: none;">
         <div class="header-card">
             <span id="sync-status" class="badge">⚡ Вход выполнен</span>
             <button onclick="logout()" style="float: right; margin-right: 8px; background:#333; color:#aaa; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Выйти</button>
             <h3 style="margin: 0 0 8px 0;">Ваш Профиль</h3>
             <p style="margin: 4px 0;"><strong>Telegram ID:</strong> <span id="app-user-id" style="color: #4caf50; font-weight: bold;">...</span></p>
-            <p style="margin: 4px 0;"><strong>Пользователь:</strong> <span id="app-user-name">...</span></p>
+            <p style="margin: 4px 0;"><strong>Никнейм:</strong> <span id="app-user-name">...</span></p>
         </div>
 
-        <h3 style="margin-bottom: 12px;">📚 Каталог Аниме:</h3>
+        <h3 style="margin-bottom: 16px;">📚 Авто-Каталог из Канала (-1001570317776):</h3>
 
-        <div class="anime-grid">
-            <div class="anime-card" id="card-101">
-                <div>
-                    <div class="anime-title">
-                        <span>Атака Титанов</span>
-                        <button class="fav-btn" onclick="toggleFav('101')">🤍</button>
-                    </div>
-                    <div class="status-group">
-                        <div class="status-btn" onclick="setStatus('101', 'watching')">👀 Смотрю</div>
-                        <div class="status-btn" onclick="setStatus('101', 'completed')">✅ Просмотрено</div>
-                        <div class="status-btn" onclick="setStatus('101', 'planned')">📌 В планах</div>
-                        <div class="status-btn" onclick="setStatus('101', 'dropped')">❌ Брошено</div>
-                    </div>
-                </div>
-                <div class="rating-box">
-                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
-                    <select onchange="setRating('101', this.value)">
-                        <option value="0">Без оценки</option>
-                        <option value="10">⭐ 10/10</option>
-                        <option value="9">⭐ 9/10</option>
-                        <option value="8">⭐ 8/10</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="anime-card" id="card-102">
-                <div>
-                    <div class="anime-title">
-                        <span>Наруто: Ураганные хроники</span>
-                        <button class="fav-btn" onclick="toggleFav('102')">🤍</button>
-                    </div>
-                    <div class="status-group">
-                        <div class="status-btn" onclick="setStatus('102', 'watching')">👀 Смотрю</div>
-                        <div class="status-btn" onclick="setStatus('102', 'completed')">✅ Просмотрено</div>
-                        <div class="status-btn" onclick="setStatus('102', 'planned')">📌 В планах</div>
-                        <div class="status-btn" onclick="setStatus('102', 'dropped')">❌ Брошено</div>
-                    </div>
-                </div>
-                <div class="rating-box">
-                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
-                    <select onchange="setRating('102', this.value)">
-                        <option value="0">Без оценки</option>
-                        <option value="10">⭐ 10/10</option>
-                        <option value="9">⭐ 9/10</option>
-                        <option value="8">⭐ 8/10</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="anime-card" id="card-103">
-                <div>
-                    <div class="anime-title">
-                        <span>Магическая битва</span>
-                        <button class="fav-btn" onclick="toggleFav('103')">🤍</button>
-                    </div>
-                    <div class="status-group">
-                        <div class="status-btn" onclick="setStatus('103', 'watching')">👀 Смотрю</div>
-                        <div class="status-btn" onclick="setStatus('103', 'completed')">✅ Просмотрено</div>
-                        <div class="status-btn" onclick="setStatus('103', 'planned')">📌 В планах</div>
-                        <div class="status-btn" onclick="setStatus('103', 'dropped')">❌ Брошено</div>
-                    </div>
-                </div>
-                <div class="rating-box">
-                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
-                    <select onchange="setRating('103', this.value)">
-                        <option value="0">Без оценки</option>
-                        <option value="10">⭐ 10/10</option>
-                        <option value="9">⭐ 9/10</option>
-                        <option value="8">⭐ 8/10</option>
-                    </select>
-                </div>
-            </div>
+        <div id="anime-grid-container" class="anime-grid">
+            <!-- Плитки с постерами загружаются динамически -->
         </div>
     </div>
 
@@ -318,17 +255,10 @@
         let detectedUser = null;
         let activeUser = null;
 
-        const TITLES = {
-            '101': 'Атака Титанов',
-            '102': 'Наруто: Ураганные хроники',
-            '103': 'Магическая битва'
-        };
-
+        let catalogData = {};
         let userStore = { items: {} };
 
-        // ИЗВЛЕЧЕНИЕ ПОЛЬЗОВАТЕЛЯ (Из Telegram ИЛИ из памяти с главной страницы)
         function findUser() {
-            // 1. Проверяем напрямую из Telegram SDK
             if (tg?.initDataUnsafe?.user?.id) {
                 const u = tg.initDataUnsafe.user;
                 return {
@@ -336,18 +266,12 @@
                     name: u.first_name + (u.username ? ` (@${u.username})` : '')
                 };
             }
-
-            // 2. Проверяем, был ли профиль сохранен при входе на главную страницу main
             const shared = localStorage.getItem('tg_shared_user');
-            if (shared) {
-                try { return JSON.parse(shared); } catch(e) {}
-            }
-
+            if (shared) { try { return JSON.parse(shared); } catch(e){} }
             return null;
         }
 
         function initCheck() {
-            // Если сессия уже была ранее подтверждена на этой странице
             const confirmedSession = localStorage.getItem('confirmed_user_session');
             if (confirmedSession) {
                 try {
@@ -357,21 +281,18 @@
                 } catch(e){}
             }
 
-            // Ищем пользователя
             detectedUser = findUser();
 
             if (detectedUser) {
-                // Показываем подтверждение
-                document.getElementById('screen-prompt').style.display = 'block';
+                document.getElementById('screen-prompt').style.display = 'flex';
                 document.getElementById('screen-manual').style.display = 'none';
                 document.getElementById('screen-app').style.display = 'none';
 
-                document.getElementById('prompt-id').innerText = `ID: ${detectedUser.id}`;
-                document.getElementById('btn-confirm-login').innerText = `🚀 Войти как ${detectedUser.name}`;
+                document.getElementById('prompt-nickname').innerText = detectedUser.name;
+                document.getElementById('btn-back-to-nickname').innerText = `⬅️ Вернуться назад к ${detectedUser.name}`;
                 return;
             }
 
-            // Если данные не найдены
             showManualScreen();
         }
 
@@ -383,19 +304,22 @@
 
         function showManualScreen() {
             document.getElementById('screen-prompt').style.display = 'none';
-            document.getElementById('screen-manual').style.display = 'block';
+            document.getElementById('screen-manual').style.display = 'flex';
             document.getElementById('screen-app').style.display = 'none';
+        }
+
+        function backToPrompt() {
+            if (detectedUser) {
+                document.getElementById('screen-prompt').style.display = 'flex';
+                document.getElementById('screen-manual').style.display = 'none';
+            }
         }
 
         function loginManual() {
             const inputVal = document.getElementById('manual-input-id').value.trim();
-            if (!inputVal) return alert("Введите ваш Telegram ID!");
+            if (!inputVal) return alert("Введите Telegram ID!");
 
-            activeUser = {
-                id: inputVal,
-                name: `Пользователь #${inputVal}`
-            };
-
+            activeUser = { id: inputVal, name: `Пользователь #${inputVal}` };
             localStorage.setItem('confirmed_user_session', JSON.stringify(activeUser));
             enterApp();
         }
@@ -408,13 +332,77 @@
             document.getElementById('app-user-id').innerText = activeUser.id;
             document.getElementById('app-user-name').innerText = activeUser.name;
 
+            await fetchCatalog();
             await loadLibrary();
         }
 
         function logout() {
             localStorage.removeItem('confirmed_user_session');
-            localStorage.removeItem('tg_shared_user');
             location.reload();
+        }
+
+        // Загрузка каталога с Постерами из Яндекс Облака
+        async function fetchCatalog() {
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_catalog' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    catalogData = data.catalog || {};
+                    renderCatalogUI();
+                }
+            } catch(e) { console.error("Ошибка загрузки каталога:", e); }
+        }
+
+        function renderCatalogUI() {
+            const container = document.getElementById('anime-grid-container');
+            const keys = Object.keys(catalogData);
+
+            if (keys.length === 0) {
+                container.innerHTML = '<p style="color:#aaa;">Каталог пуст. Опубликуйте пост с картинкой и тегом #001 в канал -1001570317776</p>';
+                return;
+            }
+
+            container.innerHTML = keys.map(animeId => {
+                const item = catalogData[animeId];
+                const posterTag = item.poster_url 
+                    ? `<img src="${item.poster_url}" class="poster-img" alt="${item.title}">`
+                    : `<div class="poster-img" style="display:flex;align-items:center;justify-content:center;color:#555;">Нет Постера</div>`;
+
+                const seasonsHtml = Object.keys(item.seasons || {}).map(sNum => {
+                    const eps = Object.keys(item.seasons[sNum] || {}).map(epNum => 
+                        `<span class="ep-btn">С${sNum} Е${epNum}</span>`
+                    ).join('');
+                    return `<div><small style="color:#888;">Сезон ${sNum}:</small> ${eps}</div>`;
+                }).join('');
+
+                return `
+                    <div class="anime-card" id="card-${animeId}">
+                        <div>
+                            ${posterTag}
+                            <div class="anime-title">
+                                <span>${item.title || ('Аниме #' + animeId)}</span>
+                                <button style="background:none;border:none;font-size:20px;cursor:pointer;" onclick="toggleFav('${animeId}')">🤍</button>
+                            </div>
+                            <div class="status-group">
+                                <div class="status-btn" onclick="setStatus('${animeId}', 'watching')">👀 Смотрю</div>
+                                <div class="status-btn" onclick="setStatus('${animeId}', 'completed')">✅ Просмотрено</div>
+                                <div class="status-btn" onclick="setStatus('${animeId}', 'planned')">📌 В планах</div>
+                                <div class="status-btn" onclick="setStatus('${animeId}', 'dropped')">❌ Брошено</div>
+                            </div>
+                        </div>
+                        <div class="episodes-box">
+                            <strong>Серии из канала:</strong>
+                            ${seasonsHtml || '<div style="color:#666;">Серии не привязаны</div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            renderLibraryState();
         }
 
         function loadLibrary() {
@@ -422,35 +410,25 @@
                 const cloudKey = `library_${activeUser.id}`;
                 if (tg?.CloudStorage) {
                     tg.CloudStorage.getItem(cloudKey, (err, val) => {
-                        if (!err && val) {
-                            try { userStore = JSON.parse(val); } catch(e) {}
-                        }
-                        renderCardsUI();
+                        if (!err && val) { try { userStore = JSON.parse(val); } catch(e){} }
+                        renderLibraryState();
                         resolve();
                     });
                 } else {
                     const saved = localStorage.getItem(cloudKey);
                     if (saved) { try { userStore = JSON.parse(saved); } catch(e){} }
-                    renderCardsUI();
+                    renderLibraryState();
                     resolve();
                 }
             });
         }
 
-        function renderCardsUI() {
+        function renderLibraryState() {
             userStore.items = userStore.items || {};
-
-            Object.keys(TITLES).forEach(animeId => {
+            Object.keys(userStore.items).forEach(animeId => {
                 const cardEl = document.getElementById(`card-${animeId}`);
                 if (!cardEl) return;
-
-                const itemData = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
-
-                const favBtn = cardEl.querySelector('.fav-btn');
-                favBtn.innerText = itemData.is_fav ? '❤️' : '🤍';
-
-                const selectEl = cardEl.querySelector('select');
-                selectEl.value = itemData.rating || 0;
+                const itemData = userStore.items[animeId];
 
                 const statusBtns = cardEl.querySelectorAll('.status-btn');
                 statusBtns.forEach(btn => {
@@ -467,42 +445,14 @@
         async function setStatus(animeId, statusName) {
             userStore.items = userStore.items || {};
             const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
-            
             current.status = (current.status === statusName) ? 'none' : statusName;
-            current.title = TITLES[animeId];
-
             userStore.items[animeId] = current;
-            renderCardsUI();
-            await saveLibrary();
-        }
-
-        async function setRating(animeId, ratingVal) {
-            userStore.items = userStore.items || {};
-            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
-
-            current.rating = parseInt(ratingVal) || 0;
-            current.title = TITLES[animeId];
-
-            userStore.items[animeId] = current;
-            renderCardsUI();
-            await saveLibrary();
-        }
-
-        async function toggleFav(animeId) {
-            userStore.items = userStore.items || {};
-            const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
-
-            current.is_fav = !current.is_fav;
-            current.title = TITLES[animeId];
-
-            userStore.items[animeId] = current;
-            renderCardsUI();
+            renderLibraryState();
             await saveLibrary();
         }
 
         async function saveLibrary() {
             document.getElementById('sync-status').innerText = '⚡ Сохранение...';
-
             const cloudKey = `library_${activeUser.id}`;
             if (tg?.CloudStorage) {
                 tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
@@ -510,22 +460,18 @@
                 localStorage.setItem(cloudKey, JSON.stringify(userStore));
             }
 
-            const sharedInitData = localStorage.getItem('tg_shared_initdata') || tg?.initData || "";
-
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'update_channel',
-                    initData: sharedInitData,
+                    initData: localStorage.getItem('tg_shared_initdata') || tg?.initData || "",
                     user_id: activeUser.id,
                     user_name: activeUser.name,
                     items: userStore.items
                 })
             }).then(() => {
                 document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
-            }).catch(() => {
-                document.getElementById('sync-status').innerText = '⚡ Сохранено';
             });
         }
 
