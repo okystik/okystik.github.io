@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - Библиотека и Синхронизация</title>
+    <title>Кинотеатр - Универсальный Вход</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -15,7 +15,28 @@
             padding: 16px;
         }
 
-        /* Шапка страницы */
+        /* Форма авторизации для обычных браузеров */
+        .auth-card {
+            background: #1e1e1e;
+            border: 1px solid #f24b1f;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0 16px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #111;
+            color: #fff;
+            font-size: 15px;
+        }
+
         .header-card {
             background: #1e1e1e;
             border: 1px solid #333;
@@ -34,7 +55,18 @@
             float: right;
         }
 
-        /* Сетка Плиток Аниме */
+        .logout-btn {
+            background: #333;
+            color: #ff6b6b;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            float: right;
+            margin-right: 8px;
+        }
+
         .anime-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -46,7 +78,6 @@
             .anime-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        /* Карточка Плитки */
         .anime-card {
             background: #1e1e1e;
             border: 1px solid #333;
@@ -75,7 +106,6 @@
             width: auto;
         }
 
-        /* Кнопки статусов */
         .status-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -100,7 +130,6 @@
         .status-btn.active-planned { background: #ed6c02; color: #fff; border-color: #ff9800; }
         .status-btn.active-dropped { background: #d32f2f; color: #fff; border-color: #f44336; }
 
-        /* Выбор Оценки */
         .rating-box {
             display: flex;
             align-items: center;
@@ -120,20 +149,9 @@
             font-size: 12px;
         }
 
-        /* Экран предупреждения для внешних браузеров */
-        .access-denied-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-            text-align: center;
-            padding: 20px;
-        }
-
         button.primary-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #f24b1f;
             color: #fff;
             border: none;
@@ -146,32 +164,32 @@
 </head>
 <body>
 
-    <!-- Экран если открыто вне Telegram -->
-    <div id="access-denied-block" class="access-denied-screen" style="display: none;">
-        <div style="font-size: 64px; margin-bottom: 16px;">🔒</div>
-        <h2 style="color: #ff4d4d; margin-bottom: 10px;">ВХОД ИЗ БРАУЗЕРА</h2>
-        <p style="color: #aaa; font-size: 14px; line-height: 1.5; max-width: 300px;">
-            Пожалуйста, откройте чат с нашим Ботом в Telegram и перейдите в приложение оттуда.
+    <!-- 1. ФОРМА АВТОРИЗАЦИИ (Для обычных браузеров) -->
+    <div id="browser-auth-block" class="auth-card" style="display: none;">
+        <div style="font-size: 48px; margin-bottom: 12px;">🔑</div>
+        <h2 style="margin: 0 0 8px 0; font-size: 20px;">Авторизация на сайте</h2>
+        <p style="color: #aaa; font-size: 13px; line-height: 1.5;">
+            Введите ваш Telegram ID для входа в личный профиль и загрузки сохраненного прогресса.
         </p>
+        <input type="text" id="manual-tg-id" placeholder="Ваш Telegram ID (например: 593810291)">
+        <button class="primary-btn" onclick="loginManual()">Войти в Аккаунт</button>
     </div>
 
-    <!-- Основной интерфейс приложения -->
+    <!-- 2. ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
     <div id="main-app-block" style="display: none;">
         
-        <!-- Шапка -->
         <div class="header-card">
-            <span id="sync-status" class="badge">⚡ Мгновенно</span>
-            <h3 style="margin: 0 0 8px 0;">Ваш Настоящий Профиль</h3>
-            <p style="margin: 4px 0;"><strong>Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold;">Определение...</span></p>
+            <span id="sync-status" class="badge">⚡ Вход выполнен</span>
+            <button class="logout-btn" id="logout-btn" onclick="logoutBrowser()" style="display:none;">Выйти</button>
+            <h3 style="margin: 0 0 8px 0;">Ваш Профиль</h3>
+            <p style="margin: 4px 0;"><strong>Telegram ID:</strong> <span id="user-id" style="color: #4caf50; font-weight: bold;">...</span></p>
             <p style="margin: 4px 0;"><strong>Пользователь:</strong> <span id="user-name">...</span></p>
         </div>
 
-        <h3 style="margin-bottom: 12px;">📚 Плитки Каталога Аниме:</h3>
+        <h3 style="margin-bottom: 12px;">📚 Каталог Аниме:</h3>
 
-        <!-- Сетка Аниме Плиток -->
         <div class="anime-grid">
             
-            <!-- Плитка 1 -->
             <div class="anime-card" id="card-101">
                 <div>
                     <div class="anime-title">
@@ -192,12 +210,10 @@
                         <option value="10">⭐ 10/10</option>
                         <option value="9">⭐ 9/10</option>
                         <option value="8">⭐ 8/10</option>
-                        <option value="7">⭐ 7/10</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Плитка 2 -->
             <div class="anime-card" id="card-102">
                 <div>
                     <div class="anime-title">
@@ -218,12 +234,10 @@
                         <option value="10">⭐ 10/10</option>
                         <option value="9">⭐ 9/10</option>
                         <option value="8">⭐ 8/10</option>
-                        <option value="7">⭐ 7/10</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Плитка 3 -->
             <div class="anime-card" id="card-103">
                 <div>
                     <div class="anime-title">
@@ -248,31 +262,6 @@
                 </div>
             </div>
 
-            <!-- Плитка 4 -->
-            <div class="anime-card" id="card-104">
-                <div>
-                    <div class="anime-title">
-                        <span>Клинок, рассекающий демонов</span>
-                        <button class="fav-btn" onclick="toggleFav('104')">🤍</button>
-                    </div>
-                    <div class="status-group">
-                        <div class="status-btn" onclick="setStatus('104', 'watching')">👀 Смотрю</div>
-                        <div class="status-btn" onclick="setStatus('104', 'completed')">✅ Просмотрено</div>
-                        <div class="status-btn" onclick="setStatus('104', 'planned')">📌 В планах</div>
-                        <div class="status-btn" onclick="setStatus('104', 'dropped')">❌ Брошено</div>
-                    </div>
-                </div>
-                <div class="rating-box">
-                    <span style="font-size: 12px; color: #aaa;">Моя оценка:</span>
-                    <select onchange="setRating('104', this.value)">
-                        <option value="0">Без оценки</option>
-                        <option value="10">⭐ 10/10</option>
-                        <option value="9">⭐ 9/10</option>
-                        <option value="8">⭐ 8/10</option>
-                    </select>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -285,51 +274,93 @@
             tg.expand();
         }
 
-        // УМНАЯ ПАМЯТЬ СЕССИИ (Для перехода между index.html и test.html без сбоев)
-        function getTelegramUser() {
+        let activeUser = null;
+
+        // Автоматическое определение среды входа
+        function resolveUserSession() {
+            // 1. Если зашли внутри Telegram (Mini App)
             if (tg?.initDataUnsafe?.user?.id) {
-                const u = tg.initDataUnsafe.user;
-                sessionStorage.setItem('tg_user_session', JSON.stringify(u));
+                const u = {
+                    id: tg.initDataUnsafe.user.id.toString(),
+                    name: tg.initDataUnsafe.user.first_name + (tg.initDataUnsafe.user.username ? ` (@${tg.initDataUnsafe.user.username})` : ''),
+                    source: 'telegram'
+                };
+                sessionStorage.setItem('active_user', JSON.stringify(u));
                 return u;
             }
-            const saved = sessionStorage.getItem('tg_user_session');
-            return saved ? JSON.parse(saved) : null;
+
+            // 2. Если уже авторизованы в обычном браузере
+            const savedBrowserUser = localStorage.getItem('browser_user');
+            if (savedBrowserUser) {
+                try { return JSON.parse(savedBrowserUser); } catch(e){}
+            }
+
+            // 3. Сессия переходов внутри сайта
+            const savedSession = sessionStorage.getItem('active_user');
+            if (savedSession) {
+                try { return JSON.parse(savedSession); } catch(e){}
+            }
+
+            return null;
         }
 
-        const realUser = getTelegramUser();
-        const tgUserId = realUser?.id ? realUser.id.toString() : null;
-
-        // Названия аниме
         const TITLES = {
             '101': 'Атака Титанов',
             '102': 'Наруто: Ураганные хроники',
-            '103': 'Магическая битва',
-            '104': 'Клинок, рассекающий демонов'
+            '103': 'Магическая битва'
         };
 
         let userStore = { items: {} };
 
         async function initApp() {
-            if (!tgUserId) {
-                document.getElementById('access-denied-block').style.display = 'flex';
+            activeUser = resolveUserSession();
+
+            // Если пользователь не авторизован (в обычном браузере) — показываем форму входа
+            if (!activeUser) {
+                document.getElementById('browser-auth-block').style.display = 'block';
                 document.getElementById('main-app-block').style.display = 'none';
                 return;
             }
 
-            document.getElementById('access-denied-block').style.display = 'none';
+            // Если авторизован
+            document.getElementById('browser-auth-block').style.display = 'none';
             document.getElementById('main-app-block').style.display = 'block';
 
-            document.getElementById('user-id').innerText = tgUserId;
-            document.getElementById('user-name').innerText = realUser.first_name + (realUser.username ? ` (@${realUser.username})` : '');
+            document.getElementById('user-id').innerText = activeUser.id;
+            document.getElementById('user-name').innerText = activeUser.name;
+
+            if (activeUser.source === 'browser') {
+                document.getElementById('logout-btn').style.display = 'inline-block';
+            }
 
             await loadLibrary();
         }
 
-        // Загрузка библиотеки из нативного облака Telegram (CloudStorage)
+        // Ручной вход для обычных браузеров
+        async function loginManual() {
+            const inputVal = document.getElementById('manual-tg-id').value.trim();
+            if (!inputVal) return alert("Введите ваш Telegram ID!");
+
+            const newUser = {
+                id: inputVal,
+                name: `Пользователь #${inputVal}`,
+                source: 'browser'
+            };
+
+            localStorage.setItem('browser_user', JSON.stringify(newUser));
+            await initApp();
+        }
+
+        function logoutBrowser() {
+            localStorage.removeItem('browser_user');
+            sessionStorage.removeItem('active_user');
+            location.reload();
+        }
+
         function loadLibrary() {
             return new Promise((resolve) => {
-                const cloudKey = `library_${tgUserId}`;
-                if (tg?.CloudStorage) {
+                const cloudKey = `library_${activeUser.id}`;
+                if (tg?.CloudStorage && activeUser.source === 'telegram') {
                     tg.CloudStorage.getItem(cloudKey, (err, val) => {
                         if (!err && val) {
                             try { userStore = JSON.parse(val); } catch(e) {}
@@ -346,7 +377,6 @@
             });
         }
 
-        // Мгновенная отрисовка Плиток и Статусов (0ms)
         function renderCardsUI() {
             userStore.items = userStore.items || {};
 
@@ -356,18 +386,15 @@
 
                 const itemData = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
 
-                // Обновляем сердечко
                 const favBtn = cardEl.querySelector('.fav-btn');
                 favBtn.innerText = itemData.is_fav ? '❤️' : '🤍';
 
-                // Обновляем селект оценки
                 const selectEl = cardEl.querySelector('select');
                 selectEl.value = itemData.rating || 0;
 
-                // Обновляем кнопки статусов
                 const statusBtns = cardEl.querySelectorAll('.status-btn');
                 statusBtns.forEach(btn => {
-                    btn.className = 'status-btn'; // Сброс
+                    btn.className = 'status-btn';
                     const text = btn.innerText;
                     if (text.includes('Смотрю') && itemData.status === 'watching') btn.classList.add('active-watching');
                     if (text.includes('Просмотрено') && itemData.status === 'completed') btn.classList.add('active-completed');
@@ -377,12 +404,10 @@
             });
         }
 
-        // Изменение статуса (Мгновенный отклик 0ms)
         async function setStatus(animeId, statusName) {
             userStore.items = userStore.items || {};
             const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
             
-            // Если кликнули на активный статус — сбрасываем
             current.status = (current.status === statusName) ? 'none' : statusName;
             current.title = TITLES[animeId];
 
@@ -391,7 +416,6 @@
             await saveLibrary();
         }
 
-        // Изменение оценки
         async function setRating(animeId, ratingVal) {
             userStore.items = userStore.items || {};
             const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
@@ -404,7 +428,6 @@
             await saveLibrary();
         }
 
-        // Переключение Избранного
         async function toggleFav(animeId) {
             userStore.items = userStore.items || {};
             const current = userStore.items[animeId] || { status: 'none', rating: 0, is_fav: false };
@@ -417,32 +440,30 @@
             await saveLibrary();
         }
 
-        // Сохранение в CloudStorage + отправка в Канал -1003952561478
         async function saveLibrary() {
             document.getElementById('sync-status').innerText = '⚡ Сохранение...';
 
-            const cloudKey = `library_${tgUserId}`;
-            if (tg?.CloudStorage) {
+            const cloudKey = `library_${activeUser.id}`;
+            if (tg?.CloudStorage && activeUser.source === 'telegram') {
                 tg.CloudStorage.setItem(cloudKey, JSON.stringify(userStore));
             } else {
                 localStorage.setItem(cloudKey, JSON.stringify(userStore));
             }
 
-            // Фоновая синхронизация с Яндекс Функцией для карточки в Канале
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'update_channel',
                     initData: tg?.initData || "",
-                    user_id: tgUserId,
-                    user_name: realUser.first_name + (realUser.username ? ` (@${realUser.username})` : ''),
+                    user_id: activeUser.id,
+                    user_name: activeUser.name,
                     items: userStore.items
                 })
             }).then(() => {
                 document.getElementById('sync-status').innerText = '⚡ Синхронизировано';
             }).catch(() => {
-                document.getElementById('sync-status').innerText = '⚡ Локально сохранено';
+                document.getElementById('sync-status').innerText = '⚡ Сохранено';
             });
         }
 
