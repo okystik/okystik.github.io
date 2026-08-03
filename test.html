@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аниме Кинотеатр - Вход</title>
+    <title>Тестовое Меню - Аниме</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -15,7 +15,6 @@
             padding: 16px;
         }
 
-        /* 1. Карточка предложения войти */
         .prompt-card {
             background: #1e1e1e;
             border: 1px solid #333;
@@ -52,7 +51,6 @@
             margin: 8px 0 20px 0;
         }
 
-        /* Кнопки */
         button.action-btn {
             width: 100%;
             padding: 14px;
@@ -64,10 +62,7 @@
             font-size: 15px;
             cursor: pointer;
             margin-bottom: 10px;
-            transition: transform 0.1s;
         }
-
-        button.action-btn:active { transform: scale(0.98); }
 
         button.secondary-btn {
             width: 100%;
@@ -79,7 +74,6 @@
             cursor: pointer;
         }
 
-        /* Основной интерфейс */
         .header-card {
             background: #1e1e1e;
             border: 1px solid #333;
@@ -193,7 +187,7 @@
 </head>
 <body>
 
-    <!-- 1. ЭКРАН ПРЕДЛОЖЕНИЯ ВХОДА (Если ID определен автоматически) -->
+    <!-- 1. ЭКРАН ПОДТВЕРЖДЕНИЯ (Если ID подхвачен с главной страницы) -->
     <div id="screen-prompt" class="prompt-card" style="display: none;">
         <div class="avatar-box">👤</div>
         <h2 style="margin: 0 0 6px 0; font-size: 20px;">Здравствуйте!</h2>
@@ -212,11 +206,11 @@
         </button>
     </div>
 
-    <!-- 2. ЭКРАН РУЧНОГО ВВОДА ID (Для обычных браузеров) -->
+    <!-- 2. ЭКРАН РУЧНОГО ВВОДА (Только если зашли с улицы) -->
     <div id="screen-manual" class="prompt-card" style="display: none;">
         <div class="avatar-box">🔑</div>
         <h2 style="margin: 0 0 6px 0; font-size: 20px;">Вход по Telegram ID</h2>
-        <p style="color: #aaa; font-size: 13px; margin: 0;">Введите ваш Telegram ID для загрузки сохраненного профиля:</p>
+        <p style="color: #aaa; font-size: 13px; margin: 0;">Введите ваш Telegram ID для загрузки профиля:</p>
         
         <input type="text" id="manual-input-id" placeholder="Например: 593810291">
 
@@ -225,21 +219,19 @@
         </button>
     </div>
 
-    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС ПРИЛОЖЕНИЯ (Каталог и Плитки) -->
+    <!-- 3. ОСНОВНОЙ ИНТЕРФЕЙС -->
     <div id="screen-app" style="display: none;">
-        
         <div class="header-card">
             <span id="sync-status" class="badge">⚡ Вход выполнен</span>
             <button onclick="logout()" style="float: right; margin-right: 8px; background:#333; color:#aaa; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Выйти</button>
             <h3 style="margin: 0 0 8px 0;">Ваш Профиль</h3>
             <p style="margin: 4px 0;"><strong>Telegram ID:</strong> <span id="app-user-id" style="color: #4caf50; font-weight: bold;">...</span></p>
-            <p style="margin: 4px 0;"><strong>Имя:</strong> <span id="app-user-name">...</span></p>
+            <p style="margin: 4px 0;"><strong>Пользователь:</strong> <span id="app-user-name">...</span></p>
         </div>
 
-        <h3 style="margin-bottom: 12px;">📚 Плитки Каталога:</h3>
+        <h3 style="margin-bottom: 12px;">📚 Каталог Аниме:</h3>
 
         <div class="anime-grid">
-            
             <div class="anime-card" id="card-101">
                 <div>
                     <div class="anime-title">
@@ -311,7 +303,6 @@
                     </select>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -335,9 +326,28 @@
 
         let userStore = { items: {} };
 
-        // 1. ПРОВЕРКА ПРИ ЗАПУСКЕ
+        // ИЗВЛЕЧЕНИЕ ПОЛЬЗОВАТЕЛЯ (Из Telegram ИЛИ из памяти с главной страницы)
+        function findUser() {
+            // 1. Проверяем напрямую из Telegram SDK
+            if (tg?.initDataUnsafe?.user?.id) {
+                const u = tg.initDataUnsafe.user;
+                return {
+                    id: u.id.toString(),
+                    name: u.first_name + (u.username ? ` (@${u.username})` : '')
+                };
+            }
+
+            // 2. Проверяем, был ли профиль сохранен при входе на главную страницу main
+            const shared = localStorage.getItem('tg_shared_user');
+            if (shared) {
+                try { return JSON.parse(shared); } catch(e) {}
+            }
+
+            return null;
+        }
+
         function initCheck() {
-            // Если сессия уже была подтверждена ранее
+            // Если сессия уже была ранее подтверждена на этой странице
             const confirmedSession = localStorage.getItem('confirmed_user_session');
             if (confirmedSession) {
                 try {
@@ -347,25 +357,21 @@
                 } catch(e){}
             }
 
-            // Проверяем автоматический ID от Telegram
-            if (tg?.initDataUnsafe?.user?.id) {
-                const u = tg.initDataUnsafe.user;
-                detectedUser = {
-                    id: u.id.toString(),
-                    name: u.first_name + (u.username ? ` (@${u.username})` : '')
-                };
+            // Ищем пользователя
+            detectedUser = findUser();
 
-                // Показываем предложение войти
+            if (detectedUser) {
+                // Показываем подтверждение
                 document.getElementById('screen-prompt').style.display = 'block';
                 document.getElementById('screen-manual').style.display = 'none';
                 document.getElementById('screen-app').style.display = 'none';
 
                 document.getElementById('prompt-id').innerText = `ID: ${detectedUser.id}`;
-                document.getElementById('btn-confirm-login').innerText = `🚀 Войти как ${u.first_name}`;
+                document.getElementById('btn-confirm-login').innerText = `🚀 Войти как ${detectedUser.name}`;
                 return;
             }
 
-            // Если открыто в обычном браузере — показываем поле ввода
+            // Если данные не найдены
             showManualScreen();
         }
 
@@ -407,10 +413,10 @@
 
         function logout() {
             localStorage.removeItem('confirmed_user_session');
+            localStorage.removeItem('tg_shared_user');
             location.reload();
         }
 
-        // Загрузка библиотеки
         function loadLibrary() {
             return new Promise((resolve) => {
                 const cloudKey = `library_${activeUser.id}`;
@@ -504,12 +510,14 @@
                 localStorage.setItem(cloudKey, JSON.stringify(userStore));
             }
 
+            const sharedInitData = localStorage.getItem('tg_shared_initdata') || tg?.initData || "";
+
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'update_channel',
-                    initData: tg?.initData || "",
+                    initData: sharedInitData,
                     user_id: activeUser.id,
                     user_name: activeUser.name,
                     items: userStore.items
